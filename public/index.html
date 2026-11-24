@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Aether RPG - Loja VIP (Modo Teste)</title>
+  <style>
+    :root {
+      --bg: #070b14;
+      --card: #0f172a;
+      --card-2: #131f38;
+      --border: rgba(127, 255, 212, 0.18);
+      --neon: #7fffd4;
+      --blue: #1e90ff;
+      --green: #00ff88;
+      --warn: #ffb90f;
+      --text: #f8fafc;
+      --muted: #94a3b8;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, sans-serif; }
+    body {
+      background: radial-gradient(circle at top, #10203c 0%, var(--bg) 65%);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 24px 16px 60px;
+    }
+    .container { max-width: 920px; margin: 0 auto; }
+    header {
+      text-align: center;
+      margin-bottom: 28px;
+      padding: 22px;
+      border-radius: 16px;
+      background: rgba(15, 23, 42, 0.85);
+      border: 1px solid var(--border);
+    }
+    .badge {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 999px;
+      background: rgba(255, 185, 15, 0.15);
+      color: var(--warn);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      margin-bottom: 10px;
+    }
+    h1 { font-size: 28px; color: var(--neon); margin-bottom: 6px; }
+    .sub { color: var(--muted); font-size: 14px; }
+    .box {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+    label { display: block; font-size: 13px; color: var(--neon); margin-bottom: 8px; font-weight: 600; }
+    input {
+      width: 100%;
+      padding: 13px 14px;
+      border-radius: 10px;
+      border: 1px solid rgba(255,255,255,0.14);
+      background: var(--bg);
+      color: var(--text);
+      font-size: 15px;
+      outline: none;
+    }
+    input:focus { border-color: var(--neon); }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 14px;
+      margin-top: 16px;
+    }
+    .pkg {
+      background: var(--card-2);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 14px;
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 14px;
+      transition: transform 0.15s, border-color 0.15s;
+    }
+    .pkg:hover { transform: translateY(-2px); border-color: var(--neon); }
+    .pkg-coins { font-size: 22px; font-weight: 800; color: var(--blue); }
+    .pkg-price { font-size: 15px; color: var(--green); font-weight: 700; margin-top: 4px; }
+    .pkg-desc { font-size: 12px; color: var(--muted); margin-top: 6px; line-height: 1.4; }
+    button {
+      width: 100%;
+      padding: 12px;
+      border: none;
+      border-radius: 10px;
+      background: linear-gradient(90deg, var(--neon), var(--blue));
+      color: #06101d;
+      font-weight: 800;
+      font-size: 14px;
+      cursor: pointer;
+    }
+    button:disabled { opacity: 0.5; cursor: not-allowed; }
+    .msg {
+      margin-top: 14px;
+      padding: 12px 14px;
+      border-radius: 10px;
+      font-size: 14px;
+      display: none;
+    }
+    .msg.ok { display: block; background: rgba(0, 255, 136, 0.12); border: 1px solid var(--green); color: var(--green); }
+    .msg.err { display: block; background: rgba(255, 64, 64, 0.14); border: 1px solid #ff4040; color: #ff8080; }
+    .feed-item {
+      padding: 10px 12px;
+      border-radius: 10px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.06);
+      font-size: 13px;
+      margin-top: 8px;
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="badge">MODO DE TESTE GRATUITO • SEM DINHEIRO REAL</div>
+      <h1>AETHER RPG • LOJA VIP</h1>
+      <p class="sub">Informe seu nick exato do SA-MP e simule a compra de Moedas VIP para resgatar via <b>/menuvip</b>.</p>
+    </header>
+
+    <div class="box">
+      <label for="nick">Nick exato no servidor (ex: HenriqueTop)</label>
+      <input id="nick" type="text" maxlength="24" placeholder="Digite seu nick do SA-MP..." />
+
+      <div class="grid">
+        <div class="pkg">
+          <div>
+            <div class="pkg-coins">16.000 Moedas VIP</div>
+            <div class="pkg-price">R$ 16,00 (Teste Grátis)</div>
+            <div class="pkg-desc">Ideal para testar o Pacote Inicial no servidor.</div>
+          </div>
+          <button onclick="comprar(16000, this)">Simular Compra</button>
+        </div>
+
+        <div class="pkg">
+          <div>
+            <div class="pkg-coins">30.000 Moedas VIP</div>
+            <div class="pkg-price">R$ 30,00 (Teste Grátis)</div>
+            <div class="pkg-desc">Valor base para testar VIP Nv. 1.</div>
+          </div>
+          <button onclick="comprar(30000, this)">Simular Compra</button>
+        </div>
+
+        <div class="pkg">
+          <div>
+            <div class="pkg-coins">100.000 Moedas VIP</div>
+            <div class="pkg-price">R$ 100,00 (Teste Grátis)</div>
+            <div class="pkg-desc">Valor base para testar planos Socio mais altos.</div>
+          </div>
+          <button onclick="comprar(100000, this)">Simular Compra</button>
+        </div>
+      </div>
+
+      <div id="msg" class="msg"></div>
+    </div>
+
+    <div class="box">
+      <label>Fila de Testes Recentes</label>
+      <div id="feed"><span style="color:var(--muted);font-size:13px;">Carregando...</span></div>
+    </div>
+  </div>
+
+  <script>
+    const msgEl = document.getElementById('msg');
+    const feedEl = document.getElementById('feed');
+
+    function mostrarMsg(texto, ok) {
+      msgEl.className = 'msg ' + (ok ? 'ok' : 'err');
+      msgEl.textContent = texto;
+    }
+
+    async function comprar(moedas, btn) {
+      const nick = document.getElementById('nick').value.trim();
+      if (!nick) {
+        mostrarMsg('Digite o seu nick exato antes de simular a compra.', false);
+        return;
+      }
+      btn.disabled = true;
+      try {
+        const res = await fetch('/api/comprar', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ nick, moedas })
+        });
+        const data = await res.json();
+        if (!data.ok) {
+          mostrarMsg(data.erro || 'Erro ao registrar compra.', false);
+        } else {
+          mostrarMsg(`Compra simulada! ${moedas.toLocaleString('pt-BR')} Moedas VIP enviadas para ${nick}. Entre no jogo e use /menuvip -> Resgatar Compra (Loja Web).`, true);
+          carregarStatus();
+        }
+      } catch (e) {
+        mostrarMsg('Falha de conexao com o servidor da loja (se estiver no plano free do Render, aguarde alguns segundos e tente de novo).', false);
+      } finally {
+        btn.disabled = false;
+      }
+    }
+
+    async function carregarStatus() {
+      try {
+        const res = await fetch('/api/status');
+        const data = await res.json();
+        if (!data.ultimas || !data.ultimas.length) {
+          feedEl.innerHTML = '<span style="color:var(--muted);font-size:13px;">Nenhuma compra de teste ainda.</span>';
+          return;
+        }
+        feedEl.innerHTML = data.ultimas.map(u => `
+          <div class="feed-item">
+            <span><b>${u.nick}</b> — <span style="color:#7fffd4">${u.moedas.toLocaleString('pt-BR')} Moedas VIP</span></span>
+            <span style="color:#94a3b8">${u.id}</span>
+          </div>
+        `).join('');
+      } catch (_) {}
+    }
+
+    carregarStatus();
+    setInterval(carregarStatus, 8000);
+  </script>
+</body>
+              </html>
