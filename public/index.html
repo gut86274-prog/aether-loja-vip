@@ -3,1114 +3,556 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Brasil Aether RPG — Loja VIP</title>
+  <title>Brasil Aether RPG — Loja de Cash</title>
   <style>
     :root {
-      --bg: #050911;
-      --bg-2: #0a1220;
-      --card: #0e1829;
-      --card-hover: #14223a;
+      --bg: #050912;
+      --card: #0c1526;
+      --card-2: #111e36;
       --accent: #00e5ff;
       --accent-2: #1e90ff;
-      --accent-dark: #03222e;
+      --gold: #fbbf24;
+      --ok: #00f5a0;
+      --err: #ff4d4d;
       --text: #f3f7fc;
       --muted: #94a3b8;
-      --border: rgba(0, 229, 255, 0.16);
-      --danger: #ff4d4d;
-      --ok: #00f5a0;
+      --border: rgba(0, 229, 255, 0.18);
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; }
-    html { scroll-behavior: smooth; }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, sans-serif; }
     body {
-      background: var(--bg);
+      background: radial-gradient(circle at top, #0b223d 0%, var(--bg) 62%);
       color: var(--text);
       min-height: 100vh;
-      overflow-x: hidden;
     }
 
-    /* Top Promo Bar */
-    .top-promo {
+    .topbar {
       background: linear-gradient(90deg, var(--accent), var(--accent-2));
       color: #04101c;
       text-align: center;
       font-size: 11px;
-      font-weight: 800;
-      letter-spacing: 0.6px;
+      font-weight: 900;
       padding: 6px 12px;
+      letter-spacing: 0.6px;
       text-transform: uppercase;
     }
 
-    /* Navbar */
-    .navbar {
+    .nav {
       position: sticky;
       top: 0;
-      z-index: 40;
-      background: rgba(5, 9, 17, 0.92);
+      z-index: 30;
+      background: rgba(5, 9, 18, 0.92);
       backdrop-filter: blur(10px);
-      border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+      border-bottom: 1px solid rgba(255,255,255,0.08);
       padding: 12px 20px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 14px;
+      gap: 12px;
       flex-wrap: wrap;
     }
-    .nav-left { display: flex; align-items: center; gap: 14px; flex: 1; min-width: 240px; }
+
     .brand {
       font-size: 18px;
       font-weight: 900;
-      letter-spacing: 0.8px;
       color: #fff;
-      text-decoration: none;
       cursor: pointer;
-      white-space: nowrap;
+      letter-spacing: 0.6px;
     }
     .brand span { color: var(--accent); }
-    .search-box {
-      flex: 1;
-      max-width: 340px;
-      background: var(--card);
-      border: 1px solid rgba(255,255,255,0.1);
-      border-radius: 7px;
-      padding: 8px 12px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    .search-box input {
-      width: 100%;
-      background: transparent;
-      border: none;
-      color: var(--text);
-      font-size: 13px;
-      outline: none;
-    }
-    .nav-right { display: flex; align-items: center; gap: 8px; }
-    .btn-nav {
-      background: var(--card);
-      color: var(--text);
-      border: 1px solid rgba(255,255,255,0.12);
-      border-radius: 7px;
-      padding: 8px 12px;
-      font-size: 12px;
-      font-weight: 700;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-    }
-    .btn-nav:hover { border-color: var(--accent); color: var(--accent); }
-    .cart-badge {
-      background: var(--accent);
-      color: #04101c;
-      font-size: 11px;
-      font-weight: 900;
-      padding: 1px 6px;
-      border-radius: 999px;
-    }
 
-    /* Hero */
-    .hero-wrap {
-      position: relative;
-      background:
-        radial-gradient(circle at 50% 25%, rgba(0, 229, 255, 0.34), rgba(30, 144, 255, 0.12) 45%, rgba(5, 9, 17, 0.96) 80%),
-        linear-gradient(180deg, #07192c 0%, var(--bg) 100%);
-      border-bottom: 1px solid var(--border);
-      padding: 64px 20px 56px;
-      text-align: center;
-      overflow: hidden;
+    .nav-actions { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+    .btn {
+      border: none;
+      border-radius: 8px;
+      padding: 10px 15px;
+      font-size: 13px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: transform 0.15s, filter 0.15s;
     }
-    .hero-watermark {
-      position: absolute;
-      inset: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: clamp(54px, 14vw, 155px);
-      font-weight: 900;
-      color: rgba(0, 229, 255, 0.05);
-      letter-spacing: 8px;
-      pointer-events: none;
-      user-select: none;
-      text-transform: uppercase;
-    }
-    .hero-content { position: relative; z-index: 2; max-width: 720px; margin: 0 auto; }
-    .hero-content h1 {
-      font-size: clamp(28px, 5vw, 46px);
-      line-height: 1.12;
-      font-weight: 900;
-      margin-bottom: 12px;
-    }
-    .hero-content h1 span { color: var(--accent); }
-    .hero-content p {
-      color: #cbd5e1;
-      font-size: 14px;
-      line-height: 1.55;
-      max-width: 540px;
-      margin: 0 auto 22px;
-    }
+    .btn:hover { transform: translateY(-1px); filter: brightness(1.06); }
+    .btn:disabled { opacity: 0.5; cursor: not-allowed; }
     .btn-primary {
       background: linear-gradient(90deg, var(--accent), var(--accent-2));
       color: #04101c;
-      border: none;
-      border-radius: 7px;
-      padding: 11px 20px;
-      font-size: 13px;
-      font-weight: 800;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 7px;
-      text-decoration: none;
-      transition: filter 0.15s, transform 0.15s;
     }
-    .btn-primary:hover { filter: brightness(1.08); transform: translateY(-1px); }
-    .btn-primary:disabled { opacity: 0.55; cursor: not-allowed; }
-    .btn-secondary {
+    .btn-dark {
       background: var(--card);
       color: var(--text);
       border: 1px solid rgba(255,255,255,0.14);
-      border-radius: 7px;
-      padding: 11px 18px;
-      font-size: 13px;
-      font-weight: 700;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 7px;
     }
-    .btn-secondary:hover { border-color: var(--accent); }
+    .btn-adm {
+      background: rgba(251, 191, 36, 0.14);
+      color: var(--gold);
+      border: 1px solid rgba(251, 191, 36, 0.45);
+    }
 
-    /* Main Layout with Sidebar */
-    .page-shell {
-      max-width: 1260px;
-      margin: 0 auto;
-      padding: 28px 18px 64px;
+    .container { max-width: 1120px; margin: 0 auto; padding: 28px 18px 64px; }
+
+    .hero {
+      background: linear-gradient(135deg, rgba(0,229,255,0.18), rgba(30,144,255,0.08)), var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 26px;
       display: grid;
-      grid-template-columns: 210px 1fr;
-      gap: 24px;
-      align-items: start;
-    }
-    @media (max-width: 860px) {
-      .page-shell { grid-template-columns: 1fr; }
-      .sidebar { display: flex; overflow-x: auto; gap: 6px; padding-bottom: 6px; }
-    }
-
-    .sidebar {
-      background: rgba(14, 24, 41, 0.75);
-      border: 1px solid rgba(255,255,255,0.06);
-      border-radius: 10px;
-      padding: 10px;
-    }
-    .side-btn {
-      width: 100%;
-      text-align: left;
-      background: transparent;
-      color: var(--muted);
-      border: none;
-      border-radius: 6px;
-      padding: 9px 11px;
-      font-size: 12px;
-      font-weight: 700;
-      cursor: pointer;
-      white-space: nowrap;
-      transition: background 0.15s, color 0.15s;
-    }
-    .side-btn:hover, .side-btn.active {
-      background: rgba(0, 229, 255, 0.14);
-      color: var(--accent);
-    }
-
-    .section-title {
-      font-size: 16px;
-      font-weight: 800;
-      margin-bottom: 14px;
-      display: flex;
+      grid-template-columns: 1.3fr 0.7fr;
+      gap: 20px;
       align-items: center;
-      gap: 8px;
+      margin-bottom: 26px;
     }
-    .pill-tag {
-      display: inline-block;
-      background: var(--accent);
-      color: #04101c;
-      font-size: 11px;
-      font-weight: 900;
-      padding: 4px 10px;
-      border-radius: 6px;
-      margin: 22px 0 12px;
-    }
+    @media (max-width: 800px) { .hero { grid-template-columns: 1fr; } }
+    .hero h1 { font-size: clamp(24px, 4vw, 36px); font-weight: 900; margin-bottom: 8px; }
+    .hero h1 span { color: var(--accent); }
+    .hero p { color: #cbd5e1; font-size: 14px; line-height: 1.5; }
 
-    /* Categorias Populares */
-    .cat-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(145px, 1fr));
-      gap: 12px;
+    .nick-box {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 18px;
       margin-bottom: 24px;
     }
-    .cat-card {
-      position: relative;
-      height: 110px;
-      border-radius: 10px;
-      overflow: hidden;
-      cursor: pointer;
-      border: 1px solid rgba(255,255,255,0.08);
-      display: flex;
-      align-items: flex-end;
-      padding: 10px;
-      background: linear-gradient(155deg, rgba(0,229,255,0.28), rgba(10,18,32,0.95));
-      transition: transform 0.15s, border-color 0.15s;
-    }
-    .cat-card:hover { transform: translateY(-2px); border-color: var(--accent); }
-    .cat-card span {
-      position: relative;
-      z-index: 2;
-      font-size: 12px;
-      font-weight: 800;
-      color: #fff;
-      text-shadow: 0 2px 8px rgba(0,0,0,0.85);
-    }
-
-    /* Vitrine de Produtos */
-    .prod-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(215px, 1fr));
-      gap: 16px;
-    }
-    .prod-card {
-      background: var(--card);
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 10px;
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      transition: transform 0.15s, border-color 0.15s;
-    }
-    .prod-card:hover { transform: translateY(-2px); border-color: rgba(0,229,255,0.45); }
-    .prod-thumb {
-      height: 155px;
-      background: linear-gradient(135deg, #0b2540 0%, #091322 60%, #062b38 100%);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 14px;
-      text-align: center;
-      position: relative;
-      cursor: pointer;
-      border-bottom: 1px solid rgba(255,255,255,0.06);
-    }
-    .prod-thumb .mini-badge {
-      background: var(--accent);
-      color: #04101c;
-      font-size: 10px;
-      font-weight: 900;
-      padding: 2px 8px;
-      border-radius: 4px;
-      text-transform: uppercase;
-      margin-bottom: 6px;
-    }
-    .prod-thumb .thumb-title {
-      font-size: 17px;
-      font-weight: 900;
-      color: #fff;
-      line-height: 1.15;
-    }
-    .prod-thumb .thumb-coins {
-      font-size: 12px;
-      color: var(--accent);
-      font-weight: 700;
-      margin-top: 5px;
-    }
-    .sold-out-overlay {
-      position: absolute;
-      inset: 0;
-      background: rgba(5, 9, 17, 0.75);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .sold-out-badge {
-      background: #1e293b;
-      color: #e2e8f0;
-      font-size: 11px;
-      font-weight: 800;
-      padding: 5px 10px;
-      border-radius: 6px;
-      letter-spacing: 0.5px;
-    }
-    .prod-body { padding: 12px; }
-    .prod-name { font-size: 13px; font-weight: 800; margin-bottom: 6px; cursor: pointer; }
-    .price-old { font-size: 11px; color: var(--muted); text-decoration: line-through; }
-    .price-now { font-size: 15px; font-weight: 900; color: #fff; margin-bottom: 10px; }
-    .prod-actions { display: flex; gap: 6px; }
-    .prod-actions .btn-primary { flex: 1; padding: 8px 10px; font-size: 12px; }
-
-    /* Tela de Detalhes do Produto */
-    .detail-view { max-width: 1100px; margin: 24px auto 64px; padding: 0 18px; }
-    .breadcrumb { font-size: 12px; color: var(--muted); margin-bottom: 16px; }
-    .breadcrumb a { color: var(--accent); text-decoration: none; cursor: pointer; }
-    .detail-grid {
-      display: grid;
-      grid-template-columns: 1.45fr 0.85fr;
-      gap: 18px;
-      align-items: start;
-    }
-    @media (max-width: 860px) { .detail-grid { grid-template-columns: 1fr; } }
-    .panel {
-      background: var(--card);
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 10px;
-      padding: 18px;
-      margin-bottom: 16px;
-    }
-    .product-top-card {
-      display: grid;
-      grid-template-columns: 220px 1fr;
-      gap: 18px;
-      align-items: center;
-    }
-    @media (max-width: 600px) { .product-top-card { grid-template-columns: 1fr; } }
-    .detail-box-art {
-      height: 200px;
-      border-radius: 8px;
-      background: linear-gradient(145deg, #0b2946, #061829);
-      border: 1px solid var(--border);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 14px;
-      text-align: center;
-    }
-    .meta-row { font-size: 11px; color: var(--muted); margin-bottom: 6px; }
-    .detail-title { font-size: 22px; font-weight: 900; margin-bottom: 6px; }
-    .info-card {
-      background: var(--card);
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 10px;
-      padding: 14px 16px;
-      margin-bottom: 12px;
-    }
-    .info-card h4 { font-size: 13px; font-weight: 800; margin-bottom: 4px; color: #fff; }
-    .info-card p { font-size: 12px; color: var(--muted); line-height: 1.45; }
-    .desc-text h3 { font-size: 15px; font-weight: 800; margin-bottom: 10px; }
-    .desc-text p { font-size: 13px; color: #cbd5e1; line-height: 1.6; margin-bottom: 10px; }
-
-    /* Tela de Checkout */
-    .checkout-view { max-width: 1080px; margin: 24px auto 64px; padding: 0 18px; }
-    .checkout-grid {
-      display: grid;
-      grid-template-columns: 1.25fr 0.85fr;
-      gap: 20px;
-      align-items: start;
-    }
-    @media (max-width: 860px) { .checkout-grid { grid-template-columns: 1fr; } }
-    .pay-option {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 12px 14px;
-      border-radius: 8px;
-      border: 1px solid rgba(255,255,255,0.1);
-      background: var(--bg-2);
-      margin-bottom: 10px;
-      cursor: pointer;
-    }
-    .pay-option.active {
-      border-color: var(--accent);
-      background: rgba(0, 229, 255, 0.08);
-    }
-    .pay-title { font-size: 13px; font-weight: 800; }
-    .pay-sub { font-size: 11px; color: var(--muted); }
-    .pay-disc {
-      background: rgba(0, 245, 160, 0.14);
-      color: var(--ok);
-      font-size: 10px;
-      font-weight: 800;
-      padding: 2px 7px;
-      border-radius: 999px;
-      margin-left: 6px;
-    }
-    .field { margin-bottom: 11px; }
-    .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-    @media (max-width: 520px) { .field-row { grid-template-columns: 1fr; } }
-    .input-dark {
-      width: 100%;
-      background: var(--bg-2);
-      border: 1px solid rgba(255,255,255,0.12);
-      border-radius: 7px;
-      padding: 10px 12px;
-      color: var(--text);
+    .nick-box label {
+      display: block;
       font-size: 13px;
+      font-weight: 800;
+      color: var(--accent);
+      margin-bottom: 8px;
+    }
+    .input {
+      width: 100%;
+      background: var(--bg);
+      border: 1px solid rgba(255,255,255,0.14);
+      border-radius: 9px;
+      padding: 12px 14px;
+      color: var(--text);
+      font-size: 14px;
       outline: none;
     }
-    .input-dark:focus { border-color: var(--accent); }
-    .terms-line {
+    .input:focus { border-color: var(--accent); }
+
+    .cash-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(235px, 1fr));
+      gap: 16px;
+    }
+    .cash-card {
+      background: var(--card);
+      border: 1px solid rgba(255,255,255,0.09);
+      border-radius: 14px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: transform 0.15s, border-color 0.15s;
+    }
+    .cash-card:hover { transform: translateY(-3px); border-color: var(--accent); }
+    .cash-photo {
+      height: 150px;
+      background: linear-gradient(150deg, #092642, #061224);
       display: flex;
       align-items: center;
-      gap: 8px;
-      font-size: 12px;
-      color: var(--muted);
-      margin: 12px 0 14px;
+      justify-content: center;
+      padding: 12px;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
     }
-    .terms-line a { color: var(--accent); text-decoration: none; }
+    .cash-body { padding: 15px; }
+    .cash-title { font-size: 18px; font-weight: 900; color: var(--accent); margin-bottom: 4px; }
+    .cash-sub { font-size: 12px; color: var(--muted); margin-bottom: 10px; }
+    .cash-price { font-size: 20px; font-weight: 900; color: var(--ok); margin-bottom: 12px; }
 
-    /* Resumo Lateral */
-    .cart-item-row {
+    /* Modal Pix & ADM */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.78);
+      z-index: 60;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+    .modal-card {
+      width: 100%;
+      max-width: 520px;
+      max-height: 90vh;
+      overflow-y: auto;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 20px;
+    }
+    .modal-head {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 10px;
-      padding-bottom: 12px;
-      margin-bottom: 12px;
-      border-bottom: 1px solid rgba(255,255,255,0.08);
+      margin-bottom: 14px;
     }
-    .qty-box { display: inline-flex; align-items: center; gap: 6px; }
-    .qty-btn {
-      width: 24px;
-      height: 24px;
-      border-radius: 5px;
-      border: 1px solid rgba(255,255,255,0.15);
-      background: var(--bg-2);
-      color: #fff;
-      font-weight: 800;
-      cursor: pointer;
+    .pix-box {
+      background: var(--bg);
+      border: 1px dashed var(--accent);
+      border-radius: 10px;
+      padding: 14px;
+      margin: 12px 0;
+      text-align: center;
     }
-    .btn-remove-x {
-      width: 24px;
-      height: 24px;
-      border-radius: 5px;
-      border: none;
-      background: #ef4444;
-      color: #fff;
-      font-weight: 800;
-      cursor: pointer;
+    .pix-code {
+      width: 100%;
+      font-size: 11px;
+      background: var(--card-2);
+      color: var(--accent);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 8px;
+      padding: 9px;
+      margin-top: 8px;
+      word-break: break-all;
     }
-    .coupon-row { display: flex; gap: 8px; margin-bottom: 14px; }
-    .btn-green-sm {
-      background: var(--accent);
-      color: #04101c;
-      border: none;
-      border-radius: 7px;
-      padding: 0 14px;
-      font-size: 12px;
-      font-weight: 800;
-      cursor: pointer;
-      white-space: nowrap;
-    }
-    .sum-line {
-      display: flex;
-      justify-content: space-between;
-      font-size: 13px;
-      margin-bottom: 8px;
-      color: var(--muted);
-    }
-    .sum-total {
-      display: flex;
-      justify-content: space-between;
-      font-size: 16px;
-      font-weight: 900;
-      color: #fff;
-      padding-top: 10px;
-      border-top: 1px solid rgba(255,255,255,0.1);
-    }
-
-    .feedback {
+    .alert {
       margin-top: 12px;
       padding: 11px 13px;
-      border-radius: 8px;
-      font-size: 12px;
+      border-radius: 9px;
+      font-size: 13px;
       line-height: 1.45;
-      display: none;
     }
-    .feedback.ok { display: block; background: rgba(0, 245, 160, 0.12); border: 1px solid var(--ok); color: var(--ok); }
-    .feedback.err { display: block; background: rgba(255, 77, 77, 0.14); border: 1px solid var(--danger); color: #ff9999; }
+    .alert.ok { background: rgba(0, 245, 160, 0.14); border: 1px solid var(--ok); color: var(--ok); }
+    .alert.err { background: rgba(255, 77, 77, 0.16); border: 1px solid var(--err); color: #ff9999; }
+    .alert.warn { background: rgba(251, 191, 36, 0.14); border: 1px solid var(--gold); color: var(--gold); }
 
-    /* Footer */
-    footer {
-      background: #04070e;
-      border-top: 1px solid rgba(255,255,255,0.07);
-      padding: 24px 20px;
-      margin-top: 40px;
-    }
-    .footer-inner {
-      max-width: 1260px;
-      margin: 0 auto;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 12px;
+    .log-item {
+      background: var(--bg);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 8px;
+      padding: 9px 11px;
       font-size: 12px;
-      color: var(--muted);
+      margin-top: 8px;
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
     }
     .hidden { display: none !important; }
   </style>
 </head>
 <body>
 
-  <div class="top-promo">
-    DESCONTO EXCLUSIVO DE TESTE — MOEDAS VIP &amp; PACOTES BRASIL AETHER RPG COM ENTREGA VIA /MENUVIP
+  <div class="topbar">
+    BRASIL AETHER RPG • LOJA OFICIAL DE CASH (MOEDAS VIP) • PIX INSTANTÂNEO
   </div>
 
-  <nav class="navbar">
-    <div class="nav-left">
-      <a class="brand" onclick="irParaHome()">BRASIL <span>AETHER</span></a>
-      <div class="search-box">
-        <span>🔍</span>
-        <input id="buscaInput" type="text" placeholder="Buscar produto, VIP ou Moedas VIP..." oninput="filtrarBusca()" />
-      </div>
+  <nav class="nav">
+    <div class="brand" onclick="window.scrollTo({top:0,behavior:'smooth'})">
+      BRASIL <span>AETHER</span> CASH
     </div>
-    <div class="nav-right">
-      <button class="btn-nav" onclick="abrirCheckout()">
-        🛒 Carrinho <span class="cart-badge" id="cartCount">0</span>
-      </button>
-      <button class="btn-nav" onclick="focarNick()">➞ Entrar</button>
+    <div class="nav-actions">
+      <button class="btn btn-dark" onclick="document.getElementById('nickInput').focus()">Meu Nick</button>
+      <button class="btn btn-adm" onclick="abrirModalAdm()">👑 ADM (raidi)</button>
     </div>
   </nav>
 
-  <!-- VIEW 1: VITRINE PRINCIPAL -->
-  <div id="viewHome">
-    <section class="hero-wrap">
-      <div class="hero-watermark">AETHER RPG</div>
-      <div class="hero-content">
-        <h1>Saia na frente com benefícios <span>EXCLUSIVOS!</span></h1>
+  <div class="container">
+    <section class="hero">
+      <div>
+        <h1>Compre seu <span>CASH</span> no Brasil Aether RPG</h1>
         <p>
-          Além de receber Moedas VIP e vantagens para evoluir na sua jornada no Brasil Aether RPG, você apoia o servidor a continuar ativo e sempre atualizado!
+          Escolha seu pacote de Moedas VIP, pague via <strong>Pix</strong> e resgate direto na sua conta dentro do servidor usando <strong>/menuvip &gt; Resgatar Compra (Loja Web)</strong>.
         </p>
-        <button class="btn-primary" onclick="rolarParaProdutos()">Ver produtos</button>
+      </div>
+      <div style="display:flex;justify-content:center;">
+        <svg width="170" height="115" viewBox="0 0 170 115" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="10" y="10" width="150" height="95" rx="14" fill="#07182b" stroke="#00e5ff" stroke-width="2"/>
+          <circle cx="55" cy="58" r="24" fill="#00e5ff" fill-opacity="0.18" stroke="#00e5ff" stroke-width="2"/>
+          <text x="55" y="65" text-anchor="middle" fill="#00e5ff" font-size="24" font-weight="900">A</text>
+          <text x="115" y="52" text-anchor="middle" fill="#ffffff" font-size="14" font-weight="800">CASH VIP</text>
+          <text x="115" y="72" text-anchor="middle" fill="#00f5a0" font-size="12" font-weight="800">PIX DIRETO</text>
+        </svg>
       </div>
     </section>
 
-    <div class="page-shell" id="catalogoSecao">
-      <aside class="sidebar" id="sidebarCategorias">
-        <button class="side-btn active" data-cat="todos" onclick="selecionarCategoria('todos', this)">Todos os Itens</button>
-        <button class="side-btn" data-cat="socios" onclick="selecionarCategoria('socios', this)">Sócios</button>
-        <button class="side-btn" data-cat="veiculos" onclick="selecionarCategoria('veiculos', this)">Veículos</button>
-        <button class="side-btn" data-cat="acessorios" onclick="selecionarCategoria('acessorios', this)">Acessórios</button>
-        <button class="side-btn" data-cat="propriedades" onclick="selecionarCategoria('propriedades', this)">Propriedades</button>
-        <button class="side-btn" data-cat="premium" onclick="selecionarCategoria('premium', this)">Itens PREMIUM</button>
-        <button class="side-btn" data-cat="moedas" onclick="selecionarCategoria('moedas', this)">Aether Coins</button>
-      </aside>
+    <div class="nick-box">
+      <label for="nickInput">Nick exato no servidor Brasil Aether RPG (obrigatório para receber o Cash)</label>
+      <input id="nickInput" class="input" type="text" maxlength="24" placeholder="Ex: HenriqueTop ou raidi" />
+    </div>
 
-      <main>
-        <div class="section-title">Categorias populares</div>
-        <div class="cat-grid">
-          <div class="cat-card" onclick="irCategoria('socios')"><span>Sócios</span></div>
-          <div class="cat-card" onclick="irCategoria('veiculos')"><span>Veículos</span></div>
-          <div class="cat-card" onclick="irCategoria('acessorios')"><span>Acessórios</span></div>
-          <div class="cat-card" onclick="irCategoria('propriedades')"><span>Propriedades</span></div>
-          <div class="cat-card" onclick="irCategoria('premium')"><span>Itens PREMIUM</span></div>
-          <div class="cat-card" onclick="irCategoria('moedas')"><span>Aether Coins</span></div>
-        </div>
+    <div class="cash-grid" id="gridCash"></div>
+  </div>
 
-        <div class="pill-tag" id="tituloVitrine">Itens EXCLUSIVOS</div>
-        <div class="prod-grid" id="gridExclusivos"></div>
+  <!-- MODAL PIX -->
+  <div id="modalPix" class="modal-backdrop hidden">
+    <div class="modal-card">
+      <div class="modal-head">
+        <h3 id="pixTitulo">Pagamento via Pix</h3>
+        <button class="btn btn-dark" onclick="fecharModalPix()">✕</button>
+      </div>
+      <p style="font-size:13px;color:var(--muted);" id="pixResumo"></p>
 
-        <div class="pill-tag">Sócios &amp; Planos VIP</div>
-        <div class="prod-grid" id="gridSocios"></div>
-      </main>
+      <div class="pix-box">
+        <div id="pixQrArea"></div>
+        <div style="font-size:12px;font-weight:800;color:var(--accent);margin-top:8px;">Pix Copia e Cola:</div>
+        <textarea id="pixCopiaCola" class="pix-code" rows="3" readonly></textarea>
+        <button class="btn btn-dark" style="margin-top:8px;width:100%;" onclick="copiarPix()">Copiar código Pix</button>
+      </div>
+
+      <div id="pixAvisoModo" class="alert warn hidden">
+        <strong>Modo de Teste Ativo:</strong> Nenhuma chave <code>MP_ACCESS_TOKEN</code> foi configurada no Render ainda. Use o botão abaixo para simular a aprovação do Pix e testar a entrega no SA-MP.
+      </div>
+
+      <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap;">
+        <button class="btn btn-primary" style="flex:1;" id="btnVerificarPix" onclick="verificarPagamentoPix()">Verificar Pagamento</button>
+        <button class="btn btn-adm hidden" style="flex:1;" id="btnSimularPix" onclick="confirmarPixTeste()">Aprovar Pix de Teste</button>
+      </div>
+
+      <div id="pixStatusMsg" class="alert hidden"></div>
     </div>
   </div>
 
-  <!-- VIEW 2: DETALHES DO PRODUTO -->
-  <div id="viewDetalhes" class="detail-view hidden">
-    <div class="breadcrumb">
-      <a onclick="irParaHome()">Início</a> › <span id="detBreadcrumbNome">Produto</span>
-    </div>
-
-    <div class="detail-grid">
-      <div>
-        <div class="panel">
-          <div class="product-top-card">
-            <div class="detail-box-art" id="detArt"></div>
-            <div>
-              <div class="meta-row" id="detMeta">100+ em estoque • Entrega via /menuvip</div>
-              <div class="detail-title" id="detTitulo">Pacote</div>
-              <div class="price-old" id="detPrecoAntigo">R$ 0,00</div>
-              <div class="price-now" id="detPrecoAtual" style="font-size:20px;margin:6px 0 14px;">R$ 0,00</div>
-              <div style="display:flex;flex-direction:column;gap:8px;max-width:260px;">
-                <button class="btn-primary" id="detBtnComprar">🛒 Comprar agora</button>
-                                <button class="btn-secondary" id="detBtnAdd">+ Adicionar ao carrinho</button>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="panel desc-text">
-          <h3>Descrição</h3>
-          <p id="detDescricao"></p>
-          <p>
-            <strong>A LIBERAÇÃO DO NICK ESCOLHIDO É AUTOMÁTICA NA FILA DA LOJA</strong>, então confira bem o seu nick do SA-MP antes de confirmar. Após enviar, entre no servidor e resgate em <strong>/menuvip &gt; Resgatar Compra (Loja Web)</strong>.
-          </p>
-        </div>
+  <!-- MODAL ADM (EXCLUSIVO PARA NICK raidi + SENHA 1234) -->
+  <div id="modalAdm" class="modal-backdrop hidden">
+    <div class="modal-card">
+      <div class="modal-head">
+        <h3 style="color:var(--gold);">👑 Painel ADM — Brasil Aether</h3>
+        <button class="btn btn-dark" onclick="fecharModalAdm()">✕</button>
       </div>
 
-      <div>
-        <div class="info-card">
-          <h4>⚡ Entrega automática na conta</h4>
-          <p>Receba suas Moedas VIP na fila da loja e resgate no jogo via /menuvip.</p>
+      <div id="admLoginForm">
+        <div style="margin-bottom:10px;">
+          <input id="admNick" class="input" type="text" placeholder="Nick de ADM (raidi)" />
         </div>
-        <div class="info-card">
-          <h4>🛡️ Segurança total</h4>
-          <p>Fluxo validado com seu nick exato do Brasil Aether RPG sem expor dados sensíveis.</p>
+        <div style="margin-bottom:12px;">
+          <input id="admSenha" class="input" type="password" placeholder="Senha de ADM" />
         </div>
-        <div class="info-card">
-          <h4>💳 Formas de pagamento</h4>
-          <p>Pix, Mercado Pago e modo de simulação gratuito ativo para testes.</p>
+        <button class="btn btn-adm" style="width:100%;" onclick="entrarAdm()">Entrar no Painel ADM</button>
+        <div id="admLoginMsg" class="alert hidden"></div>
+      </div>
+
+      <div id="admPainelLogado" class="hidden">
+        <div id="admBadgePix" class="alert warn"></div>
+
+        <div style="margin-top:12px;">
+          <label style="font-size:12px;color:var(--accent);display:block;margin-bottom:6px;">Enviar Cash direto para qualquer nick</label>
+          <input id="admNickAlvo" class="input" type="text" placeholder="Nick do player no SA-MP" style="margin-bottom:8px;" />
+          <input id="admCashQtd" class="input" type="number" placeholder="Quantidade de Moedas VIP (ex: 50000)" style="margin-bottom:8px;" />
+          <button class="btn btn-primary" style="width:100%;" onclick="admEnviarCash()">Enviar Cash na Fila</button>
+        </div>
+
+        <div id="admAcaoMsg" class="alert hidden"></div>
+
+        <div style="margin-top:16px;">
+          <div style="font-size:12px;font-weight:800;color:var(--muted);">Últimas movimentações</div>
+          <div id="admHistorico"></div>
         </div>
       </div>
     </div>
   </div>
-
-  <!-- VIEW 3: CHECKOUT -->
-  <div id="viewCheckout" class="checkout-view hidden">
-    <div class="breadcrumb">
-      <a onclick="irParaHome()">Início</a> › Checkout
-    </div>
-
-    <div class="checkout-grid">
-      <div>
-        <div class="panel">
-          <div class="section-title">Forma de pagamento</div>
-          <div class="pay-option active" onclick="selecionarPagamento('Pix', this)">
-            <div>
-              <div class="pay-title">💠 Pix <span class="pay-disc">10% de desconto</span></div>
-              <div class="pay-sub">Aprovação imediata (Modo Teste)</div>
-            </div>
-            <span>●</span>
-          </div>
-          <div class="pay-option" onclick="selecionarPagamento('Mercado Pago', this)">
-            <div>
-              <div class="pay-title">🤝 Mercado Pago</div>
-              <div class="pay-sub">Aprovação imediata (Modo Teste)</div>
-            </div>
-            <span>○</span>
-          </div>
-        </div>
-
-        <div class="panel">
-          <div class="section-title">Informações de contato &amp; conta</div>
-          <div class="field-row">
-            <div class="field">
-              <input class="input-dark" id="inpNome" type="text" placeholder="Nome" />
-            </div>
-            <div class="field">
-              <input class="input-dark" id="inpSobrenome" type="text" placeholder="Sobrenome" />
-            </div>
-          </div>
-          <div class="field">
-            <input class="input-dark" id="inpEmail" type="email" placeholder="Email" />
-          </div>
-          <div class="field">
-            <input class="input-dark" id="inpNick" type="text" maxlength="24" placeholder="Nick que você irá utilizar no SA-MP (obrigatório)" />
-          </div>
-          <div class="field">
-            <input class="input-dark" id="inpDiscord" type="text" placeholder="Discord (opcional)" />
-          </div>
-
-          <label class="terms-line">
-            <input type="checkbox" id="chkTermos" checked />
-            <span>Eu aceito os <a href="#catalogoSecao" onclick="irParaHome()">termos e condições</a> desta compra no Brasil Aether RPG.</span>
-          </label>
-
-          <button class="btn-primary" id="btnPagar" style="width:100%;" onclick="finalizarCompra()">
-            Pagar R$ 0,00
-          </button>
-
-          <div class="feedback" id="feedbackCheckout"></div>
-        </div>
-      </div>
-
-      <div class="panel">
-        <div id="listaCarrinho"></div>
-
-        <div class="coupon-row">
-          <input class="input-dark" id="inpCupom" type="text" placeholder="AETHER10" value="AETHER10" />
-          <button class="btn-green-sm" onclick="aplicarCupom()">Remover</button>
-        </div>
-
-        <div class="sum-line">
-          <span>Subtotal</span>
-          <span id="resSubtotal">R$ 0,00</span>
-        </div>
-        <div class="sum-total">
-          <span>Total</span>
-          <span id="resTotal">R$ 0,00</span>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <footer>
-    <div class="footer-inner">
-      <div class="brand" style="font-size:15px;">BRASIL <span>AETHER</span></div>
-      <div>Copyright © 2026 - Brasil Aether RPG.</div>
-      <div>Loja VIP • Modo de Teste</div>
-    </div>
-  </footer>
 
   <script>
-    const PRODUTOS = [
-      {
-        id: 'pacote-inicial',
-        cat: 'premium',
-        grupo: 'exclusivos',
-        nome: 'Pacote Inicial',
-        moedas: 16000,
-        precoAntigo: 20.00,
-        preco: 16.00,
-        esgotado: false,
-        desc: 'Pacote ideal para começar sua jornada no Brasil Aether RPG com 16.000 Moedas VIP para resgatar via /menuvip.'
-      },
-      {
-        id: 'vip-nv1',
-        cat: 'socios',
-        grupo: 'socios',
-        nome: 'VIP (Nv. 1)',
-        moedas: 30000,
-        precoAntigo: 39.90,
-        preco: 30.00,
-        esgotado: false,
-        desc: 'Crédito de 30.000 Moedas VIP referente ao plano VIP Nível 1 do Brasil Aether RPG.'
-      },
-      {
-        id: 'socio-cosmic-nv2',
-        cat: 'socios',
-        grupo: 'socios',
-        nome: 'Sócio Cosmic (Nv. 2)',
-        moedas: 40000,
-        precoAntigo: 52.00,
-        preco: 40.00,
-        esgotado: false,
-        desc: 'Crédito de 40.000 Moedas VIP referente ao plano Sócio Cosmic Nível 2.'
-      },
-      {
-        id: 'socio-stellar-nv3',
-        cat: 'socios',
-        grupo: 'socios',
-        nome: 'Sócio Stellar (Nv. 3)',
-        moedas: 75000,
-        precoAntigo: 95.00,
-        preco: 75.00,
-        esgotado: false,
-        desc: 'Crédito de 75.000 Moedas VIP referente ao plano Sócio Stellar Nível 3.'
-      },
-      {
-        id: 'socio-galaxy-nv4',
-        cat: 'socios',
-        grupo: 'socios',
-        nome: 'Sócio Galaxy (Nv. 4)',
-        moedas: 100000,
-        precoAntigo: 129.00,
-        preco: 100.00,
-        esgotado: false,
-        desc: 'Crédito de 100.000 Moedas VIP referente ao plano Sócio Galaxy Nível 4.'
-      },
-      {
-        id: 'socio-aether-nv5',
-        cat: 'socios',
-        grupo: 'socios',
-        nome: 'Sócio Aether (Nv. 5)',
-        moedas: 200000,
-        precoAntigo: 249.00,
-        preco: 200.00,
-        esgotado: false,
-        desc: 'Crédito de 200.000 Moedas VIP referente ao plano Sócio Aether Nível 5.'
-      },
-      {
-        id: 'coins-50k',
-        cat: 'moedas',
-        grupo: 'socios',
-        nome: '50.000 Moedas VIP',
-        moedas: 50000,
-        precoAntigo: 65.00,
-        preco: 50.00,
-        esgotado: true,
-        desc: 'Pacote promocional de 50.000 Moedas VIP.'
-      }
+    const PACOTES_CASH = [
+      { id: 'c1', nome: '10.000 Cash VIP', moedas: 10000, preco: 10.00, tag: 'BÁSICO', cor: '#00e5ff' },
+      { id: 'c2', nome: '25.000 Cash VIP', moedas: 25000, preco: 25.00, tag: 'POPULAR', cor: '#1e90ff' },
+      { id: 'c3', nome: '50.000 Cash VIP', moedas: 50000, preco: 45.00, tag: 'DESTAQUE', cor: '#00f5a0' },
+      { id: 'c4', nome: '100.000 Cash VIP', moedas: 100000, preco: 85.00, tag: 'PRO', cor: '#fbbf24' },
+      { id: 'c5', nome: '250.000 Cash VIP', moedas: 250000, preco: 190.00, tag: 'SUPREMO', cor: '#a855f7' },
+      { id: 'c6', nome: '500.000 Cash VIP', moedas: 500000, preco: 350.00, tag: 'AETHER', cor: '#00e5ff' }
     ];
 
-    let carrinho = [
-      { produto: PRODUTOS[0], qtd: 1 }
-    ];
-    let formaPagamento = 'Pix';
-    let cupomAtivo = true;
-    let categoriaAtual = 'todos';
+    let pagamentoAtual = null;
+    let admCredenciais = { nickAdm: '', senha: '' };
 
-    function brl(v) {
-      return 'R$ ' + Number(v).toFixed(2).replace('.', ',');
-    }
-
-    function atualizarBadge() {
-      const totalQtd = carrinho.reduce((acc, item) => acc + item.qtd, 0);
-      document.getElementById('cartCount').textContent = totalQtd;
-    }
-
-    function cardHtml(p) {
+    function arteSvg(pkg) {
       return `
-        <div class="prod-card">
-          <div class="prod-thumb" onclick="abrirDetalhes('${p.id}')">
-            <div class="mini-badge">BRASIL AETHER</div>
-            <div class="thumb-title">${p.nome}</div>
-            <div class="thumb-coins">+${p.moedas.toLocaleString('pt-BR')} Moedas VIP</div>
-            ${p.esgotado ? `<div class="sold-out-overlay"><div class="sold-out-badge">ESTOQUE ESGOTADO</div></div>` : ''}
-          </div>
-          <div class="prod-body">
-            <div class="prod-name" onclick="abrirDetalhes('${p.id}')">${p.nome}</div>
-            <div class="price-old">${brl(p.precoAntigo)}</div>
-            <div class="price-now">${brl(p.preco)}</div>
-            <div class="prod-actions">
-              <button class="btn-primary" ${p.esgotado ? 'disabled' : ''} onclick="comprarAgora('${p.id}')">
-                ${p.esgotado ? 'Esgotado' : '🛒 Comprar agora'}
-              </button>
-              <button class="btn-secondary" style="padding:8px 10px;" title="Adicionar ao carrinho" ${p.esgotado ? 'disabled' : ''} onclick="adicionarCarrinho('${p.id}', false)">
-                +
-              </button>
-            </div>
+        <svg width="190" height="125" viewBox="0 0 190 125" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="6" y="6" width="178" height="113" rx="12" fill="#061224" stroke="${pkg.cor}" stroke-width="1.8"/>
+          <rect x="18" y="16" width="66" height="20" rx="5" fill="${pkg.cor}" fill-opacity="0.18"/>
+          <text x="51" y="30" text-anchor="middle" fill="${pkg.cor}" font-size="10" font-weight="900">${pkg.tag}</text>
+          <text x="95" y="66" text-anchor="middle" fill="#ffffff" font-size="18" font-weight="900">${pkg.moedas.toLocaleString('pt-BR')}</text>
+          <text x="95" y="86" text-anchor="middle" fill="${pkg.cor}" font-size="11" font-weight="800">MOEDAS VIP • AETHER</text>
+          <text x="95" y="105" text-anchor="middle" fill="#94a3b8" font-size="10" font-weight="700">R$ ${pkg.preco.toFixed(2).replace('.', ',')}</text>
+        </svg>
+      `;
+    }
+
+    function renderPacotes() {
+      const grid = document.getElementById('gridCash');
+      grid.innerHTML = PACOTES_CASH.map(p => `
+        <div class="cash-card">
+          <div class="cash-photo">${arteSvg(p)}</div>
+          <div class="cash-body">
+            <div class="cash-title">${p.nome}</div>
+            <div class="cash-sub">Entrega automática via /menuvip no Brasil Aether RPG</div>
+            <div class="cash-price">R$ ${p.preco.toFixed(2).replace('.', ',')}</div>
+            <button class="btn btn-primary" style="width:100%;" onclick="iniciarPix('${p.id}')">
+              💠 Comprar Cash com Pix
+            </button>
           </div>
         </div>
-      `;
+      `).join('');
     }
 
-    function renderizarVitrine() {
-      const termo = (document.getElementById('buscaInput').value || '').trim().toLowerCase();
-      const filtrados = PRODUTOS.filter(p => {
-        const bateCat = categoriaAtual === 'todos' || p.cat === categoriaAtual;
-        const bateBusca = !termo || p.nome.toLowerCase().includes(termo) || String(p.moedas).includes(termo);
-        return bateCat && bateBusca;
-      });
+    async function iniciarPix(id) {
+      const pkg = PACOTES_CASH.find(item => item.id === id);
+      const nick = document.getElementById('nickInput').value.trim();
+      if (!pkg) return;
 
-      const exc = filtrados.filter(p => p.grupo === 'exclusivos');
-      const soc = filtrados.filter(p => p.grupo === 'socios');
-
-      document.getElementById('gridExclusivos').innerHTML = (exc.length ? exc : filtrados.slice(0, 1)).map(cardHtml).join('');
-      document.getElementById('gridSocios').innerHTML = soc.map(cardHtml).join('');
-    }
-
-    function selecionarCategoria(cat, btn) {
-      categoriaAtual = cat;
-      document.querySelectorAll('.side-btn').forEach(b => b.classList.remove('active'));
-      if (btn) btn.classList.add('active');
-      const rotulo = btn ? btn.textContent : 'Itens EXCLUSIVOS';
-      document.getElementById('tituloVitrine').textContent = rotulo;
-      renderizarVitrine();
-    }
-
-    function irCategoria(cat) {
-      const btn = document.querySelector(`.side-btn[data-cat="${cat}"]`);
-      selecionarCategoria(cat, btn);
-      document.getElementById('catalogoSecao').scrollIntoView({ behavior: 'smooth' });
-    }
-
-    function filtrarBusca() {
-      renderizarVitrine();
-    }
-
-    function rolarParaProdutos() {
-      document.getElementById('catalogoSecao').scrollIntoView({ behavior: 'smooth' });
-    }
-
-    function mostrarView(idView) {
-      ['viewHome', 'viewDetalhes', 'viewCheckout'].forEach(id => {
-        document.getElementById(id).classList.toggle('hidden', id !== idView);
-      });
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-
-    function irParaHome() {
-      mostrarView('viewHome');
-    }
-
-    function abrirDetalhes(id) {
-      const p = PRODUTOS.find(item => item.id === id);
-      if (!p) return;
-      document.getElementById('detBreadcrumbNome').textContent = p.nome;
-      document.getElementById('detTitulo').textContent = p.nome;
-      document.getElementById('detPrecoAntigo').textContent = brl(p.precoAntigo);
-      document.getElementById('detPrecoAtual').textContent = brl(p.preco);
-      document.getElementById('detDescricao').textContent = p.desc;
-      document.getElementById('detArt').innerHTML = `
-        <div class="mini-badge">BRASIL AETHER RPG</div>
-        <div style="font-size:20px;font-weight:900;margin-top:4px;">${p.nome}</div>
-        <div style="font-size:13px;color:var(--accent);font-weight:700;margin-top:6px;">+${p.moedas.toLocaleString('pt-BR')} Moedas VIP</div>
-      `;
-      const btnComprar = document.getElementById('detBtnComprar');
-      const btnAdd = document.getElementById('detBtnAdd');
-      btnComprar.disabled = p.esgotado;
-      btnAdd.disabled = p.esgotado;
-      btnComprar.onclick = () => comprarAgora(p.id);
-      btnAdd.onclick = () => adicionarCarrinho(p.id, false);
-      mostrarView('viewDetalhes');
-    }
-
-    function adicionarCarrinho(id, irCheckout) {
-      const p = PRODUTOS.find(item => item.id === id);
-      if (!p || p.esgotado) return;
-      const existente = carrinho.find(item => item.produto.id === id);
-      if (existente) {
-        existente.qtd += 1;
-      } else {
-        carrinho.push({ produto: p, qtd: 1 });
-      }
-      atualizarBadge();
-      renderizarCheckout();
-      if (irCheckout) abrirCheckout();
-    }
-
-    function comprarAgora(id) {
-      const p = PRODUTOS.find(item => item.id === id);
-      if (!p || p.esgotado) return;
-      carrinho = [{ produto: p, qtd: 1 }];
-      atualizarBadge();
-      renderizarCheckout();
-      abrirCheckout();
-    }
-
-    function alterarQtd(index, delta) {
-      if (!carrinho[index]) return;
-      carrinho[index].qtd += delta;
-      if (carrinho[index].qtd <= 0) carrinho.splice(index, 1);
-      atualizarBadge();
-      renderizarCheckout();
-    }
-
-    function removerItem(index) {
-      carrinho.splice(index, 1);
-      atualizarBadge();
-      renderizarCheckout();
-    }
-
-    function selecionarPagamento(metodo, el) {
-      formaPagamento = metodo;
-      document.querySelectorAll('.pay-option').forEach(o => {
-        o.classList.remove('active');
-        o.querySelector('span:last-child').textContent = '○';
-      });
-      el.classList.add('active');
-      el.querySelector('span:last-child').textContent = '●';
-      renderizarCheckout();
-    }
-
-    function aplicarCupom() {
-      const btn = document.querySelector('.btn-green-sm');
-      const inp = document.getElementById('inpCupom');
-      if (cupomAtivo) {
-        cupomAtivo = false;
-        inp.value = '';
-        inp.placeholder = 'Código de cupom';
-        btn.textContent = 'Aplicar';
-      } else {
-        if (inp.value.trim().toUpperCase() === 'AETHER10') {
-          cupomAtivo = true;
-          btn.textContent = 'Remover';
-        }
-      }
-      renderizarCheckout();
-    }
-
-    function renderizarCheckout() {
-      const lista = document.getElementById('listaCarrinho');
-      if (!carrinho.length) {
-        lista.innerHTML = `<p style="font-size:13px;color:var(--muted);margin-bottom:14px;">Seu carrinho está vazio. Escolha um pacote na loja.</p>`;
-      } else {
-        lista.innerHTML = carrinho.map((item, idx) => `
-          <div class="cart-item-row">
-            <div>
-              <div style="font-size:13px;font-weight:800;">${item.produto.nome}</div>
-              <div style="font-size:11px;color:var(--accent);">+${(item.produto.moedas * item.qtd).toLocaleString('pt-BR')} Moedas VIP</div>
-              <div style="font-size:12px;color:#fff;margin-top:2px;">${brl(item.produto.preco * item.qtd)}</div>
-            </div>
-            <div class="qty-box">
-              <button class="qty-btn" onclick="alterarQtd(${idx}, -1)">-</button>
-              <span style="font-size:12px;font-weight:800;min-width:16px;text-align:center;">${item.qtd}</span>
-              <button class="qty-btn" onclick="alterarQtd(${idx}, 1)">+</button>
-              <button class="btn-remove-x" onclick="removerItem(${idx})">✕</button>
-            </div>
-          </div>
-        `).join('');
-      }
-
-      const subtotal = carrinho.reduce((acc, item) => acc + item.produto.preco * item.qtd, 0);
-      const desconto = (formaPagamento === 'Pix' && cupomAtivo) ? subtotal * 0.10 : 0;
-      const total = Math.max(0, subtotal - desconto);
-
-      document.getElementById('resSubtotal').textContent = brl(subtotal);
-      document.getElementById('resTotal').textContent = brl(total);
-      document.getElementById('btnPagar').textContent = `Pagar ${brl(total)}`;
-    }
-
-    function abrirCheckout() {
-      renderizarCheckout();
-      mostrarView('viewCheckout');
-    }
-
-    function focarNick() {
-      abrirCheckout();
-      setTimeout(() => document.getElementById('inpNick').focus(), 120);
-    }
-
-    async function finalizarCompra() {
-      const fb = document.getElementById('feedbackCheckout');
-      const nick = document.getElementById('inpNick').value.trim();
-      const aceitou = document.getElementById('chkTermos').checked;
-      const btn = document.getElementById('btnPagar');
-
-      fb.className = 'feedback';
-      fb.style.display = 'none';
-
-      if (!carrinho.length) {
-        fb.className = 'feedback err';
-        fb.textContent = 'Adicione pelo menos um pacote ao carrinho antes de continuar.';
-        return;
-      }
       if (!nick || nick.length < 3) {
-        fb.className = 'feedback err';
-        fb.textContent = 'Digite o seu nick exato do SA-MP para entregar as Moedas VIP.';
-        return;
-      }
-      if (!aceitou) {
-        fb.className = 'feedback err';
-        fb.textContent = 'Marque a caixa de termos e condições para prosseguir.';
+        alert('Digite o seu nick exato do SA-MP antes de comprar Cash!');
+        document.getElementById('nickInput').focus();
         return;
       }
 
-      const totalMoedas = carrinho.reduce((acc, item) => acc + item.produto.moedas * item.qtd, 0);
-      btn.disabled = true;
+      document.getElementById('modalPix').classList.remove('hidden');
+      document.getElementById('pixTitulo').textContent = `Pix — ${pkg.nome}`;
+      document.getElementById('pixResumo').textContent = `Jogador: ${nick} • Valor: R$ ${pkg.preco.toFixed(2).replace('.', ',')}`;
+      document.getElementById('pixCopiaCola').value = 'Gerando código Pix...';
+      document.getElementById('pixQrArea').innerHTML = '';
+      document.getElementById('pixStatusMsg').className = 'alert hidden';
+      document.getElementById('btnSimularPix').classList.add('hidden');
 
       try {
-        const res = await fetch('/api/comprar', {
+        const res = await fetch('/api/pix/criar', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ nick, moedas: totalMoedas })
+          body: JSON.stringify({ nick, moedas: pkg.moedas, valor: pkg.preco })
         });
         const data = await res.json();
         if (!data.ok) {
-          fb.className = 'feedback err';
-          fb.textContent = data.erro || 'Não foi possível registrar a compra.';
-        } else {
-          fb.className = 'feedback ok';
-          fb.innerHTML = `
-            <strong>Compra registrada para ${nick}!</strong><br/>
-            Total: <strong>+${totalMoedas.toLocaleString('pt-BR')} Moedas VIP</strong> (${formaPagamento} • Modo Teste).<br/>
-            Entre no <strong>Brasil Aether RPG</strong>, abra <strong>/menuvip</strong> e clique em <strong>Resgatar Compra (Loja Web)</strong>.
-          `;
+          document.getElementById('pixStatusMsg').className = 'alert err';
+          document.getElementById('pixStatusMsg').textContent = data.erro || 'Erro ao criar Pix.';
+          return;
         }
-      } catch (err) {
-        fb.className = 'feedback err';
-        fb.textContent = 'Falha ao conectar com o servidor da loja. Se o Render estiver dormindo, aguarde alguns segundos e tente novamente.';
-      } finally {
-        btn.disabled = false;
+
+        pagamentoAtual = data.paymentId;
+        document.getElementById('pixCopiaCola').value = data.pixCopiaECola || '';
+
+        if (data.qrCodeBase64) {
+          document.getElementById('pixQrArea').innerHTML = `<img src="data:image/png;base64,${data.qrCodeBase64}" alt="QR Code Pix" style="width:170px;height:170px;border-radius:8px;" />`;
+          document.getElementById('pixAvisoModo').classList.add('hidden');
+        } else {
+          document.getElementById('pixAvisoModo').classList.remove('hidden');
+          document.getElementById('btnSimularPix').classList.remove('hidden');
+        }
+      } catch (e) {
+        document.getElementById('pixStatusMsg').className = 'alert err';
+        document.getElementById('pixStatusMsg').textContent = 'Falha ao conectar com o servidor.';
       }
     }
 
-    renderizarVitrine();
-    atualizarBadge();
-    renderizarCheckout();
+    function fecharModalPix() {
+      document.getElementById('modalPix').classList.add('hidden');
+    }
+
+    function copiarPix() {
+      const el = document.getElementById('pixCopiaCola');
+      el.select();
+      navigator.clipboard?.writeText(el.value).catch(() => {});
+    }
+
+    async function verificarPagamentoPix() {
+      if (!pagamentoAtual) return;
+      const msg = document.getElementById('pixStatusMsg');
+      const res = await fetch(`/api/pix/status/${encodeURIComponent(pagamentoAtual)}`);
+      const data = await res.json();
+
+      if (data.entregue) {
+        msg.className = 'alert ok';
+        msg.textContent = 'Pagamento aprovado! Cash liberado na fila. Entre no servidor e use /menuvip -> Resgatar Compra (Loja Web).';
+      } else {
+        msg.className = 'alert warn';
+        msg.textContent = `Status atual: ${data.status || 'pendente'}. Assim que o Pix for pago, o Cash será liberado.`;
+      }
+    }
+
+    async function confirmarPixTeste() {
+      if (!pagamentoAtual) return;
+      const msg = document.getElementById('pixStatusMsg');
+      const res = await fetch('/api/pix/confirmar-teste', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ paymentId: pagamentoAtual })
+      });
+      const data = await res.json();
+      if (data.ok) {
+        msg.className = 'alert ok';
+        msg.textContent = `Pix aprovado! +${Number(data.moedas).toLocaleString('pt-BR')} Moedas VIP enviadas para ${data.nick}. Vá no jogo e use /menuvip -> Resgatar Compra (Loja Web)!`;
+      }
+    }
+
+    function abrirModalAdm() {
+      document.getElementById('modalAdm').classList.remove('hidden');
+    }
+
+    function fecharModalAdm() {
+      document.getElementById('modalAdm').classList.add('hidden');
+    }
+
+    async function entrarAdm() {
+      const nick = document.getElementById('admNick').value.trim();
+      const senha = document.getElementById('admSenha').value.trim();
+      const msg = document.getElementById('admLoginMsg');
+
+      const res = await fetch('/api/adm/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ nick, senha })
+      });
+      const data = await res.json();
+
+      if (!data.ok) {
+        msg.className = 'alert err';
+        msg.textContent = data.erro || 'Acesso negado.';
+        return;
+      }
+
+      admCredenciais = { nickAdm: nick, senha };
+      document.getElementById('admLoginForm').classList.add('hidden');
+      document.getElementById('admPainelLogado').classList.remove('hidden');
+      document.getElementById('admBadgePix').textContent = data.pixRealAtivo
+        ? 'Pix Real (Mercado Pago) ATIVO via MP_ACCESS_TOKEN.'
+        : 'Pix Real ainda sem MP_ACCESS_TOKEN no Render (usando modo de teste).';
+
+      renderAdmHistorico(data.historico || []);
+    }
+
+    function renderAdmHistorico(lista) {
+      const box = document.getElementById('admHistorico');
+      if (!lista.length) {
+        box.innerHTML = '<div style="font-size:12px;color:var(--muted);margin-top:6px;">Nenhuma compra registrada.</div>';
+        return;
+      }
+      box.innerHTML = lista.map(item => `
+        <div class="log-item">
+          <div><b>${item.nick}</b> • <span style="color:var(--accent)">+${Number(item.moedas).toLocaleString('pt-BR')} Cash</span></div>
+          <div style="color:var(--muted)">${item.origem}</div>
+        </div>
+      `).join('');
+    }
+
+        async function admEnviarCash() {
+      const nickAlvo = document.getElementById('admNickAlvo').value.trim();
+      const moedas = parseInt(document.getElementById('admCashQtd').value, 10);
+      const msg = document.getElementById('admAcaoMsg');
+
+      const res = await fetch('/api/adm/enviar-cash', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          nickAdm: admCredenciais.nickAdm,
+          senha: admCredenciais.senha,
+          nickAlvo,
+          moedas
+        })
+      });
+      const data = await res.json();
+
+      if (!data.ok) {
+        msg.className = 'alert err';
+        msg.textContent = data.erro || 'Erro ao enviar cash.';
+      } else {
+        msg.className = 'alert ok';
+        msg.textContent = `Enviado +${moedas.toLocaleString('pt-BR')} Cash para ${nickAlvo}!`;
+        renderAdmHistorico(data.historico || []);
+      }
+    }
+
+    renderPacotes();
   </script>
 </body>
 </html>
