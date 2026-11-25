@@ -1,555 +1,60 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Brasil Aether RPG — Loja de Cash</title>
-  <style>
-    :root {
-      --bg: #050912;
-      --card: #0c1526;
-      --card-2: #111e36;
-      --accent: #00e5ff;
-      --accent-2: #1e90ff;
-      --gold: #fbbf24;
-      --ok: #00f5a0;
-      --err: #ff4d4d;
-      --text: #f3f7fc;
-      --muted: #94a3b8;
-      --border: rgba(0, 229, 255, 0.18);
-    }
-
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, sans-serif; }
-    body {
-      background: radial-gradient(circle at top, #0b223d 0%, var(--bg) 62%);
-      color: var(--text);
-      min-height: 100vh;
-    }
-
-    .topbar {
-      background: linear-gradient(90deg, var(--accent), var(--accent-2));
-      color: #04101c;
-      text-align: center;
-      font-size: 11px;
-      font-weight: 900;
-      padding: 6px 12px;
-      letter-spacing: 0.6px;
-      text-transform: uppercase;
-    }
-
-    .nav {
-      position: sticky;
-      top: 0;
-      z-index: 30;
-      background: rgba(5, 9, 18, 0.92);
-      backdrop-filter: blur(10px);
-      border-bottom: 1px solid rgba(255,255,255,0.08);
-      padding: 12px 20px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      flex-wrap: wrap;
-    }
-
-    .brand {
-      font-size: 18px;
-      font-weight: 900;
-      color: #fff;
-      cursor: pointer;
-      letter-spacing: 0.6px;
-    }
-    .brand span { color: var(--accent); }
-
-    .nav-actions { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
-    .btn {
-      border: none;
-      border-radius: 8px;
-      padding: 10px 15px;
-      font-size: 13px;
-      font-weight: 800;
-      cursor: pointer;
-      transition: transform 0.15s, filter 0.15s;
-    }
-    .btn:hover { transform: translateY(-1px); filter: brightness(1.06); }
-    .btn:disabled { opacity: 0.5; cursor: not-allowed; }
-    .btn-primary {
-      background: linear-gradient(90deg, var(--accent), var(--accent-2));
-      color: #04101c;
-    }
-    .btn-dark {
-      background: var(--card);
-      color: var(--text);
-      border: 1px solid rgba(255,255,255,0.14);
-    }
-    .btn-adm {
-      background: rgba(251, 191, 36, 0.14);
-      color: var(--gold);
-      border: 1px solid rgba(251, 191, 36, 0.45);
-    }
-
-    .container { max-width: 1120px; margin: 0 auto; padding: 28px 18px 64px; }
-
-    .hero {
-      background: linear-gradient(135deg, rgba(0,229,255,0.18), rgba(30,144,255,0.08)), var(--card);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 26px;
-      display: grid;
-      grid-template-columns: 1.3fr 0.7fr;
-      gap: 20px;
-      align-items: center;
-      margin-bottom: 26px;
-    }
-    @media (max-width: 800px) { .hero { grid-template-columns: 1fr; } }
-    .hero h1 { font-size: clamp(24px, 4vw, 36px); font-weight: 900; margin-bottom: 8px; }
-    .hero h1 span { color: var(--accent); }
-    .hero p { color: #cbd5e1; font-size: 14px; line-height: 1.5; }
-
-    .nick-box {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 18px;
-      margin-bottom: 24px;
-    }
-    .nick-box label {
-      display: block;
-      font-size: 13px;
-      font-weight: 800;
-      color: var(--accent);
-      margin-bottom: 8px;
-    }
-    .input {
-      width: 100%;
-      background: var(--bg);
-      border: 1px solid rgba(255,255,255,0.14);
-      border-radius: 9px;
-      padding: 12px 14px;
-      color: var(--text);
-      font-size: 14px;
-      outline: none;
-    }
-    .input:focus { border-color: var(--accent); }
-
-    .cash-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(235px, 1fr));
-      gap: 16px;
-    }
-    .cash-card {
-      background: var(--card);
-      border: 1px solid rgba(255,255,255,0.09);
-      border-radius: 14px;
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      transition: transform 0.15s, border-color 0.15s;
-    }
-    .cash-card:hover { transform: translateY(-3px); border-color: var(--accent); }
-    .cash-photo {
-      height: 150px;
-      background: linear-gradient(150deg, #092642, #061224);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 12px;
-      border-bottom: 1px solid rgba(255,255,255,0.06);
-    }
-    .cash-body { padding: 15px; }
-    .cash-title { font-size: 18px; font-weight: 900; color: var(--accent); margin-bottom: 4px; }
-    .cash-sub { font-size: 12px; color: var(--muted); margin-bottom: 10px; }
-    .cash-price { font-size: 20px; font-weight: 900; color: var(--ok); margin-bottom: 12px; }
-
-    .modal-backdrop {
-      position: fixed;
-      inset: 0;
-      background: rgba(0, 0, 0, 0.78);
-      z-index: 60;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 16px;
-    }
-    .modal-card {
-      width: 100%;
-      max-width: 520px;
-      max-height: 90vh;
-      overflow-y: auto;
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 20px;
-    }
-    .modal-head {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 14px;
-    }
-    .pix-box {
-      background: var(--bg);
-      border: 1px dashed var(--accent);
-      border-radius: 10px;
-      padding: 14px;
-      margin: 12px 0;
-      text-align: center;
-    }
-    .pix-code {
-      width: 100%;
-      font-size: 11px;
-      background: var(--card-2);
-      color: var(--accent);
-      border: 1px solid rgba(255,255,255,0.1);
-      border-radius: 8px;
-      padding: 9px;
-      margin-top: 8px;
-      word-break: break-all;
-    }
-    .alert {
-      margin-top: 12px;
-      padding: 11px 13px;
-      border-radius: 9px;
-      font-size: 13px;
-      line-height: 1.45;
-    }
-    .alert.ok { background: rgba(0, 245, 160, 0.14); border: 1px solid var(--ok); color: var(--ok); }
-    .alert.err { background: rgba(255, 77, 77, 0.16); border: 1px solid var(--err); color: #ff9999; }
-    .alert.warn { background: rgba(251, 191, 36, 0.14); border: 1px solid var(--gold); color: var(--gold); }
-
-    .log-item {
-      background: var(--bg);
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 8px;
-      padding: 9px 11px;
-      font-size: 12px;
-      margin-top: 8px;
-      display: flex;
-      justify-content: space-between;
-      gap: 8px;
-    }
-    .hidden { display: none !important; }
-  </style>
+    <meta charset="UTF-8">
+    <title>Admin - Gestão de Cash</title>
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
+<body class="bg-slate-900 text-white p-8">
+    <h1 class="text-3xl font-bold mb-6">📦 Vendas Pendentes</h1>
+    <table class="w-full text-left glass rounded-lg overflow-hidden">
+        <thead class="bg-slate-800">
+            <tr>
+                <th class="p-4">Nick</th>
+                <th class="p-4">Valor</th>
+                <th class="p-4">Status</th>
+                <th class="p-4">Ação</th>
+            </tr>
+        </thead>
+        <tbody id="table-body"></tbody>
+    </table>
 
-  <div class="topbar">
-    BRASIL AETHER RPG • LOJA OFICIAL DE CASH (MOEDAS VIP) • PIX INSTANTÂNEO
-  </div>
+    <script>
+        async function loadVendas() {
+            const res = await fetch('/admin/vendas');
+            const vendas = await res.json();
+            const body = document.getElementById('table-body');
+            body.innerHTML = '';
 
-  <nav class="nav">
-    <div class="brand" onclick="window.scrollTo({top:0,behavior:'smooth'})">
-      BRASIL <span>AETHER</span> CASH
-    </div>
-    <div class="nav-actions">
-      <button class="btn btn-dark" onclick="document.getElementById('nickInput').focus()">Meu Nick</button>
-      <button class="btn btn-adm" onclick="abrirModalAdm()">👑 ADM (raidi)</button>
-    </div>
-  </nav>
-
-  <div class="container">
-    <section class="hero">
-      <div>
-        <h1>Compre seu <span>CASH</span> no Brasil Aether RPG</h1>
-        <p>
-          Escolha seu pacote de Moedas VIP, pague via <strong>Pix</strong> e resgate direto na sua conta dentro do servidor usando <strong>/menuvip &gt; Resgatar Compra (Loja Web)</strong>.
-        </p>
-      </div>
-      <div style="display:flex;justify-content:center;">
-        <svg width="170" height="115" viewBox="0 0 170 115" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <rect x="10" y="10" width="150" height="95" rx="14" fill="#07182b" stroke="#00e5ff" stroke-width="2"/>
-          <circle cx="55" cy="58" r="24" fill="#00e5ff" fill-opacity="0.18" stroke="#00e5ff" stroke-width="2"/>
-          <text x="55" y="65" text-anchor="middle" fill="#00e5ff" font-size="24" font-weight="900">A</text>
-          <text x="115" y="52" text-anchor="middle" fill="#ffffff" font-size="14" font-weight="800">CASH VIP</text>
-          <text x="115" y="72" text-anchor="middle" fill="#00f5a0" font-size="12" font-weight="800">PIX DIRETO</text>
-        </svg>
-      </div>
-    </section>
-
-    <div class="nick-box">
-      <label for="nickInput">Nick exato no servidor Brasil Aether RPG (obrigatório para receber o Cash)</label>
-      <input id="nickInput" class="input" type="text" maxlength="24" placeholder="Ex: HenriqueTop ou raidi" />
-    </div>
-
-    <div class="cash-grid" id="gridCash"></div>
-  </div>
-
-  <div id="modalPix" class="modal-backdrop hidden">
-    <div class="modal-card">
-      <div class="modal-head">
-        <h3 id="pixTitulo">Pagamento via Pix</h3>
-        <button class="btn btn-dark" onclick="fecharModalPix()">✕</button>
-      </div>
-      <p style="font-size:13px;color:var(--muted);" id="pixResumo"></p>
-
-      <div class="pix-box">
-        <div id="pixQrArea"></div>
-        <div style="font-size:12px;font-weight:800;color:var(--accent);margin-top:8px;">Pix Copia e Cola:</div>
-        <textarea id="pixCopiaCola" class="pix-code" rows="3" readonly></textarea>
-        <button class="btn btn-dark" style="margin-top:8px;width:100%;" onclick="copiarPix()">Copiar código Pix</button>
-      </div>
-
-      <div id="pixAvisoModo" class="alert warn hidden">
-        <strong>Modo de Teste Ativo:</strong> Nenhuma chave <code>MP_ACCESS_TOKEN</code> foi configurada no Render ainda. Use o botão abaixo para simular a aprovação do Pix e testar a entrega no SA-MP.
-      </div>
-
-      <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap;">
-        <button class="btn btn-primary" style="flex:1;" id="btnVerificarPix" onclick="verificarPagamentoPix()">Verificar Pagamento</button>
-        <button class="btn btn-adm hidden" style="flex:1;" id="btnSimularPix" onclick="confirmarPixTeste()">Aprovar Pix de Teste</button>
-      </div>
-
-      <div id="pixStatusMsg" class="alert hidden"></div>
-    </div>
-  </div>
-
-  <div id="modalAdm" class="modal-backdrop hidden">
-    <div class="modal-card">
-      <div class="modal-head">
-        <h3 style="color:var(--gold);">👑 Painel ADM — Brasil Aether</h3>
-        <button class="btn btn-dark" onclick="fecharModalAdm()">✕</button>
-      </div>
-
-      <div id="admLoginForm">
-        <div style="margin-bottom:10px;">
-          <input id="admNick" class="input" type="text" placeholder="Nick de ADM (raidi)" />
-        </div>
-        <div style="margin-bottom:12px;">
-          <input id="admSenha" class="input" type="password" placeholder="Senha de ADM" />
-        </div>
-        <button class="btn btn-adm" style="width:100%;" onclick="entrarAdm()">Entrar no Painel ADM</button>
-        <div id="admLoginMsg" class="alert hidden"></div>
-      </div>
-
-      <div id="admPainelLogado" class="hidden">
-        <div id="admBadgePix" class="alert warn"></div>
-
-        <div style="margin-top:12px;">
-          <label style="font-size:12px;color:var(--accent);display:block;margin-bottom:6px;">Enviar Cash direto para qualquer nick</label>
-          <input id="admNickAlvo" class="input" type="text" placeholder="Nick do player no SA-MP" style="margin-bottom:8px;" />
-          <input id="admCashQtd" class="input" type="number" placeholder="Quantidade de Moedas VIP (ex: 50000)" style="margin-bottom:8px;" />
-          <button class="btn btn-primary" style="width:100%;" onclick="admEnviarCash()">Enviar Cash na Fila</button>
-        </div>
-
-        <div id="admAcaoMsg" class="alert hidden"></div>
-
-        <div style="margin-top:16px;">
-          <div style="font-size:12px;font-weight:800;color:var(--muted);">Últimas movimentações</div>
-          <div id="admHistorico"></div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <script>
-    const PACOTES_CASH = [
-      { id: 'c1', nome: '10.000 Cash VIP', moedas: 10000, preco: 10.00, tag: 'BÁSICO', cor: '#00e5ff' },
-      { id: 'c2', nome: '25.000 Cash VIP', moedas: 25000, preco: 25.00, tag: 'POPULAR', cor: '#1e90ff' },
-      { id: 'c3', nome: '50.000 Cash VIP', moedas: 50000, preco: 45.00, tag: 'DESTAQUE', cor: '#00f5a0' },
-      { id: 'c4', nome: '100.000 Cash VIP', moedas: 100000, preco: 85.00, tag: 'PRO', cor: '#fbbf24' },
-      { id: 'c5', nome: '250.000 Cash VIP', moedas: 250000, preco: 190.00, tag: 'SUPREMO', cor: '#a855f7' },
-      { id: 'c6', nome: '500.000 Cash VIP', moedas: 500000, preco: 350.00, tag: 'AETHER', cor: '#00e5ff' }
-    ];
-
-    let pagamentoAtual = null;
-    let admCredenciais = { nickAdm: '', senha: '' };
-
-    function arteSvg(pkg) {
-      return `
-        <svg width="190" height="125" viewBox="0 0 190 125" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <rect x="6" y="6" width="178" height="113" rx="12" fill="#061224" stroke="${pkg.cor}" stroke-width="1.8"/>
-          <rect x="18" y="16" width="66" height="20" rx="5" fill="${pkg.cor}" fill-opacity="0.18"/>
-          <text x="51" y="30" text-anchor="middle" fill="${pkg.cor}" font-size="10" font-weight="900">${pkg.tag}</text>
-          <text x="95" y="66" text-anchor="middle" fill="#ffffff" font-size="18" font-weight="900">${pkg.moedas.toLocaleString('pt-BR')}</text>
-          <text x="95" y="86" text-anchor="middle" fill="${pkg.cor}" font-size="11" font-weight="800">MOEDAS VIP • AETHER</text>
-          <text x="95" y="105" text-anchor="middle" fill="#94a3b8" font-size="10" font-weight="700">R$ ${pkg.preco.toFixed(2).replace('.', ',')}</text>
-        </svg>
-      `;
-    }
-
-    function renderPacotes() {
-      const grid = document.getElementById('gridCash');
-      grid.innerHTML = PACOTES_CASH.map(p => `
-        <div class="cash-card">
-          <div class="cash-photo">${arteSvg(p)}</div>
-          <div class="cash-body">
-            <div class="cash-title">${p.nome}</div>
-            <div class="cash-sub">Entrega automática via /menuvip no Brasil Aether RPG</div>
-            <div class="cash-price">R$ ${p.preco.toFixed(2).replace('.', ',')}</div>
-            <button class="btn btn-primary" style="width:100%;" onclick="iniciarPix('${p.id}')">
-              💠 Comprar Cash com Pix
-            </button>
-          </div>
-        </div>
-      `).join('');
-    }
-
-    async function iniciarPix(id) {
-      const pkg = PACOTES_CASH.find(item => item.id === id);
-      const nick = document.getElementById('nickInput').value.trim();
-      if (!pkg) return;
-
-      if (!nick || nick.length < 3) {
-        alert('Digite o seu nick exato do SA-MP antes de comprar Cash!');
-        document.getElementById('nickInput').focus();
-        return;
-      }
-
-      document.getElementById('modalPix').classList.remove('hidden');
-      document.getElementById('pixTitulo').textContent = `Pix — ${pkg.nome}`;
-      document.getElementById('pixResumo').textContent = `Jogador: ${nick} • Valor: R$ ${pkg.preco.toFixed(2).replace('.', ',')}`;
-      document.getElementById('pixCopiaCola').value = 'Gerando código Pix...';
-      document.getElementById('pixQrArea').innerHTML = '';
-      document.getElementById('pixStatusMsg').className = 'alert hidden';
-      document.getElementById('btnSimularPix').classList.add('hidden');
-
-      try {
-        const res = await fetch('/api/pix/criar', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ nick, moedas: pkg.moedas, valor: pkg.preco })
-        });
-        const data = await res.json();
-        if (!data.ok) {
-          document.getElementById('pixStatusMsg').className = 'alert err';
-          document.getElementById('pixStatusMsg').textContent = data.erro || 'Erro ao criar Pix.';
-          return;
+            vendas.forEach(v => {
+                body.innerHTML += `
+                    <tr class="border-b border-slate-800">
+                        <td class="p-4">${v.nick}</td>
+                        <td class="p-4">R$ ${v.amount}</td>
+                        <td class="p-4">
+                            <span class="px-2 py-1 rounded text-xs ${v.status === 'pago' ? 'bg-green-600' : 'bg-yellow-600'}">
+                                ${v.status.toUpperCase()}
+                            </span>
+                        </td>
+                        <td class="p-4">
+                            ${v.status === 'pago' ? `<button onclick="entregar('${v.id}')" class="bg-blue-600 px-3 py-1 rounded text-xs">Marcar Entregue</button>` : 'Aguardando'}
+                        </td>
+                    </tr>
+                `;
+            });
         }
 
-        pagamentoAtual = data.paymentId;
-        document.getElementById('pixCopiaCola').value = data.pixCopiaECola || '';
-
-        if (data.qrCodeBase64) {
-          document.getElementById('pixQrArea').innerHTML = `<img src="data:image/png;base64,${data.qrCodeBase64}" alt="QR Code Pix" style="width:170px;height:170px;border-radius:8px;" />`;
-          document.getElementById('pixAvisoModo').classList.add('hidden');
-        } else {
-          document.getElementById('pixAvisoModo').classList.remove('hidden');
-          document.getElementById('btnSimularPix').classList.remove('hidden');
+        async function entregar(id) {
+            await fetch('/admin/entregar', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ id })
+            });
+            loadVendas();
         }
-      } catch (e) {
-        document.getElementById('pixStatusMsg').className = 'alert err';
-        document.getElementById('pixStatusMsg').textContent = 'Falha ao conectar com o servidor.';
-      }
-    }
 
-    function fecharModalPix() {
-      document.getElementById('modalPix').classList.add('hidden');
-    }
-
-    function copiarPix() {
-      const el = document.getElementById('pixCopiaCola');
-      el.select();
-      navigator.clipboard?.writeText(el.value).catch(() => {});
-    }
-
-    async function verificarPagamentoPix() {
-      if (!pagamentoAtual) return;
-      const msg = document.getElementById('pixStatusMsg');
-      const res = await fetch(`/api/pix/status/${encodeURIComponent(pagamentoAtual)}`);
-      const data = await res.json();
-
-      if (data.entregue) {
-        msg.className = 'alert ok';
-        msg.textContent = 'Pagamento aprovado! Cash liberado na fila. Entre no servidor e use /menuvip -> Resgatar Compra (Loja Web).';
-      } else {
-        msg.className = 'alert warn';
-        msg.textContent = `Status atual: ${data.status || 'pendente'}. Assim que o Pix for pago, o Cash será liberado.`;
-      }
-    }
-
-    async function confirmarPixTeste() {
-      if (!pagamentoAtual) return;
-      const msg = document.getElementById('pixStatusMsg');
-      const res = await fetch('/api/pix/confirmar-teste', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ paymentId: pagamentoAtual })
-      });
-      const data = await res.json();
-      if (data.ok) {
-        msg.className = 'alert ok';
-        msg.textContent = `Pix aprovado! +${Number(data.moedas).toLocaleString('pt-BR')} Moedas VIP enviadas para ${data.nick}. Vá no jogo e use /menuvip -> Resgatar Compra (Loja Web)!`;
-      }
-    }
-
-    function abrirModalAdm() {
-      document.getElementById('modalAdm').classList.remove('hidden');
-    }
-
-    function fecharModalAdm() {
-      document.getElementById('modalAdm').classList.add('hidden');
-    }
-
-    async function entrarAdm() {
-      const nick = document.getElementById('admNick').value.trim();
-      const senha = document.getElementById('admSenha').value.trim();
-      const msg = document.getElementById('admLoginMsg');
-
-      const res = await fetch('/api/adm/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ nick, senha })
-      });
-      const data = await res.json();
-
-      if (!data.ok) {
-        msg.className = 'alert err';
-        msg.textContent = data.erro || 'Acesso negado.';
-        return;
-      }
-
-      admCredenciais = { nickAdm: nick, senha };
-      document.getElementById('admLoginForm').classList.add('hidden');
-      document.getElementById('admPainelLogado').classList.remove('hidden');
-      document.getElementById('admBadgePix').textContent = data.pixRealAtivo
-        ? 'Pix Real (Mercado Pago) ATIVO via MP_ACCESS_TOKEN.'
-        : 'Pix Real ainda sem MP_ACCESS_TOKEN no Render (usando modo de teste).';
-
-      renderAdmHistorico(data.historico || []);
-    }
-
-    function renderAdmHistorico(lista) {
-      const box = document.getElementById('admHistorico');
-      if (!lista.length) {
-        box.innerHTML = '<div style="font-size:12px;color:var(--muted);margin-top:6px;">Nenhuma compra registrada.</div>';
-        return;
-      }
-      box.innerHTML = lista.map(item => `
-        <div class="log-item">
-          <div><b>${item.nick}</b> • <span style="color:var(--accent)">+${Number(item.moedas).toLocaleString('pt-BR')} Cash</span></div>
-          <div style="color:var(--muted)">${item.origem}</div>
-        </div>
-      `).join('');
-    }
-
-    async function admEnviarCash() {
-      const nickAlvo = document.getElementById('admNickAlvo').value.trim();
-      const moedas = parseInt(document.getElementById('admCashQtd').value, 10);
-      const msg = document.getElementById('admAcaoMsg');
-
-      const res = await fetch('/api/adm/enviar-cash', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          nickAdm: admCredenciais.nickAdm,
-          senha: admCredenciais.senha,
-          nickAlvo,
-          moedas
-        })
-      });
-      const data = await res.json();
-
-      if (!data.ok) {
-        msg.className = 'alert err';
-        msg.textContent = data.erro || 'Erro ao enviar cash.';
-      } else {
-        msg.className = 'alert ok';
-        msg.textContent = `Enviado +${moedas.toLocaleString('pt-BR')} Cash para ${nickAlvo}!`;
-        renderAdmHistorico(data.historico || []);
-      }
-    }
-
-    renderPacotes();
-  </script>
+        setInterval(loadVendas, 5000); // Atualiza a cada 5 segundos
+        loadVendas();
+    </script>
 </body>
 </html>
