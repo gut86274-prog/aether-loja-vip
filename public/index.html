@@ -162,7 +162,6 @@
     .cash-sub { font-size: 12px; color: var(--muted); margin-bottom: 10px; }
     .cash-price { font-size: 20px; font-weight: 900; color: var(--ok); margin-bottom: 12px; }
 
-    /* Modal Pix & ADM */
     .modal-backdrop {
       position: fixed;
       inset: 0;
@@ -276,7 +275,6 @@
     <div class="cash-grid" id="gridCash"></div>
   </div>
 
-  <!-- MODAL PIX -->
   <div id="modalPix" class="modal-backdrop hidden">
     <div class="modal-card">
       <div class="modal-head">
@@ -305,7 +303,6 @@
     </div>
   </div>
 
-  <!-- MODAL ADM (EXCLUSIVO PARA NICK raidi + SENHA 1234) -->
   <div id="modalAdm" class="modal-backdrop hidden">
     <div class="modal-card">
       <div class="modal-head">
@@ -525,7 +522,7 @@
       `).join('');
     }
 
-        async function admEnviarCash() {
+    async function admEnviarCash() {
       const nickAlvo = document.getElementById('admNickAlvo').value.trim();
       const moedas = parseInt(document.getElementById('admCashQtd').value, 10);
       const msg = document.getElementById('admAcaoMsg');
