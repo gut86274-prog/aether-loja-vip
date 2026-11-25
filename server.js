@@ -41,7 +41,6 @@ function adicionarEntrega(nick, moedas, origem, txId) {
   return compra;
 }
 
-// Criar pagamento Pix real (se MP_ACCESS_TOKEN estiver configurado) ou Pix Teste
 app.post('/api/pix/criar', async (req, res) => {
   try {
     const nick = String(req.body.nick || '').trim();
@@ -107,7 +106,6 @@ app.post('/api/pix/criar', async (req, res) => {
       });
     }
 
-    // Fallback caso MP_ACCESS_TOKEN ainda nao tenha sido colocado no Render
     const fakeId = 'PIXTESTE-' + Date.now();
     const db = lerFila();
     db.pagamentos[fakeId] = {
@@ -131,7 +129,6 @@ app.post('/api/pix/criar', async (req, res) => {
   }
 });
 
-// Consultar status do Pix e liberar cash assim que aprovado
 app.get('/api/pix/status/:id', async (req, res) => {
   try {
     const id = String(req.params.id || '').trim();
@@ -162,7 +159,6 @@ app.get('/api/pix/status/:id', async (req, res) => {
   }
 });
 
-// Confirmar Pix Teste (quando nao ha MP_ACCESS_TOKEN configurado)
 app.post('/api/pix/confirmar-teste', (req, res) => {
   const id = String(req.body.paymentId || '').trim();
   const db = lerFila();
@@ -177,7 +173,6 @@ app.post('/api/pix/confirmar-teste', (req, res) => {
   return res.json({ ok: true, moedas: reg.moedas, nick: reg.nick });
 });
 
-// Rota usada pela GM do SA-MP para resgatar cash na conta
 app.get('/api/resgatar', (req, res) => {
   const nick = String(req.query.nick || '').trim().toLowerCase();
   if (!nick) return res.status(400).json({ ok: false, moedas: 0 });
@@ -202,7 +197,6 @@ app.get('/api/resgatar', (req, res) => {
   return res.json({ ok: true, moedas: totalMoedas });
 });
 
-// Painel ADM exclusivo (nick raidi + senha 1234)
 app.post('/api/adm/login', (req, res) => {
   const nick = String(req.body.nick || '').trim().toLowerCase();
   const senha = String(req.body.senha || '').trim();
