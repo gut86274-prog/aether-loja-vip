@@ -3,59 +3,204 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aether Games - Loja VIP</title>
+    <title>Aether Portal | High Performance Store</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        body { background: radial-gradient(circle, #1e1b4b, #0f172a); }
-        .glass { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); }
-        .neon-border { border: 2px solid #8b5cf6; box-shadow: 0 0 15px #8b5cf6; }
+        body { background: #0f172a; color: white; font-family: 'Inter', sans-serif; }
+        .glass { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.1); }
+        .gradient-text { background: linear-gradient(to right, #a855f7, #3b82f6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .nav-link { transition: 0.3s; cursor: pointer; }
+        .nav-link:hover { color: #a855f7; transform: translateY(-2px); }
+        .hidden-page { display: none; }
     </style>
 </head>
-<body class="text-white min-h-screen flex items-center justify-center p-4">
+<body>
 
-    <div class="glass p-8 rounded-3xl w-full max-w-md neon-border text-center">
-        <h1 class="text-4xl font-black mb-2 text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-blue-400">
-            AETHER STORE
-        </h1>
-        <p class="text-gray-400 mb-6">Adquira Moedas VIP instantaneamente</p>
-
-        <div class="space-y-4">
-            <input id="nick" type="text" placeholder="Seu Nick no Jogo" class="w-full p-3 rounded-lg bg-slate-800 border border-slate-700 focus:outline-none focus:border-purple-500 transition">
-            <input id="amount" type="number" placeholder="Valor em R$ (Ex: 5.00)" class="w-full p-3 rounded-lg bg-slate-800 border border-slate-700 focus:outline-none focus:border-purple-500 transition">
-            
-            <button onclick="pagar()" id="btn-pagar" class="w-full bg-purple-600 hover:bg-purple-500 p-3 rounded-lg font-bold text-lg transition transform active:scale-95">
-                GERAR PIX AGORA
-            </button>
+    <!-- Navbar -->
+    <nav class="glass fixed top-0 w-full z-50 px-6 py-4 flex justify-between items-center">
+        <div class="text-2xl font-black gradient-text">AETHER PORTAL</div>
+        <div class="flex gap-6 font-medium">
+            <span onclick="showPage('home')" class="nav-link">Home</span>
+            <span onclick="showPage('store')" class="nav-link">Loja</span>
+            <span id="nav-auth" onclick="showPage('login')" class="nav-link">Login</span>
+            <span id="nav-dash" onclick="showPage('dash')" class="nav-link hidden">Meu Painel</span>
+            <span id="btn-logout" onclick="logout()" class="nav-link hidden text-red-400">Sair</span>
         </div>
+    </nav>
 
-        <div id="payment-area" class="hidden mt-6 p-4 bg-white rounded-xl text-black">
-            <p class="font-bold mb-2">Escaneie o QR Code:</p>
+    <!-- Home Page -->
+    <section id="page-home" class="pt-32 px-6 min-h-screen flex flex-col items-center text-center">
+        <h1 class="text-6xl font-extrabold mb-6">Eleve seu jogo ao <br><span class="gradient-text">Próximo Nível</span></h1>
+        <p class="text-gray-400 max-w-2xl text-lg mb-10">A maior e mais segura loja de moedas VIP para o Aether RPG. Entrega rápida, suporte 24h e os melhores pacotes do servidor.</p>
+        <button onclick="showPage('store')" class="bg-purple-600 hover:bg-purple-500 px-8 py-4 rounded-full font-bold text-xl transition-all transform hover:scale-105 shadow-lg shadow-purple-500/50">
+            COMEÇAR AGORA <i class="fas fa-arrow-right ml-2"></i>
+        </button>
+    </section>
+
+    <!-- Login Page -->
+    <section id="page-login" class="hidden-page pt-32 px-6 min-h-screen flex justify-center">
+        <div class="glass p-8 rounded-3xl w-full max-w-md">
+            <h2 class="text-3xl font-bold mb-6 text-center">Acesse sua Conta</h2>
+            <div class="space-y-4">
+                <input id="log-user" type="text" placeholder="Usuário" class="w-full p-3 rounded-lg bg-slate-800 border border-slate-700 focus:outline-none focus:border-purple-500">
+                <input id="log-pass" type="password" placeholder="Senha" class="w-full p-3 rounded-lg bg-slate-800 border border-slate-700 focus:outline-none focus:border-purple-500">
+                <button onclick="login()" class="w-full bg-blue-600 p-3 rounded-lg font-bold hover:bg-blue-500 transition">ENTRAR</button>
+                <p class="text-center text-gray-400">Não tem conta? <span onclick="showPage('register')" class="text-purple-400 cursor-pointer underline">Cadastre-se</span></p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Register Page -->
+    <section id="page-register" class="hidden-page pt-32 px-6 min-h-screen flex justify-center">
+        <div class="glass p-8 rounded-3xl w-full max-w-md">
+            <h2 class="text-3xl font-bold mb-6 text-center">Criar Conta</h2>
+            <div class="space-y-4">
+                <input id="reg-user" type="text" placeholder="Nome de Usuário" class="w-full p-3 rounded-lg bg-slate-800 border border-slate-700 focus:outline-none focus:border-purple-500">
+                <input id="reg-nick" type="text" placeholder="Seu Nick no SAMP" class="w-full p-3 rounded-lg bg-slate-800 border border-slate-700 focus:outline-none focus:border-purple-500">
+                <input id="reg-pass" type="password" placeholder="Senha" class="w-full p-3 rounded-lg bg-slate-800 border border-slate-700 focus:outline-none focus:border-purple-500">
+                <button onclick="register()" class="w-full bg-purple-600 p-3 rounded-lg font-bold hover:bg-purple-500 transition">CRIAR MINHA CONTA</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Store Page -->
+    <section id="page-store" class="hidden-page pt-32 px-6 min-h-screen">
+        <h2 class="text-4xl font-bold text-center mb-12">Pacotes de <span class="gradient-text">Moedas VIP</span></h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+            <!-- Card 1 -->
+            <div class="glass p-8 rounded-3xl text-center hover:border-purple-500 transition cursor-pointer group" onclick="selectPackage(1000, 1.00)">
+                <i class="fas fa-gem text-5xl text-purple-400 mb-4 group-hover:scale-110 transition"></i>
+                <h3 class="text-2xl font-bold mb-2">Iniciante</h3>
+                <p class="text-4xl font-black mb-6">R$ 1,00</p>
+                <p class="text-gray-400 mb-6">1.000 Moedas VIP</p>
+                <button class="w-full bg-slate-700 p-3 rounded-lg font-bold group-hover:bg-purple-600 transition">COMPRAR</button>
+            </div>
+            <!-- Card 2 -->
+            <div class="glass p-8 rounded-3xl text-center border-purple-500 border-2 relative overflow-hidden group" onclick="selectPackage(5000, 4.50)">
+                <div class="absolute top-0 right-0 bg-purple-500 text-xs font-bold px-3 py-1 rounded-bl-lg">POPULAR</div>
+                <i class="fas fa-crown text-5xl text-yellow-400 mb-4 group-hover:scale-110 transition"></i>
+                <h3 class="text-2xl font-bold mb-2">Intermediário</h3>
+                <p class="text-4xl font-black mb-6">R$ 4,50</p>
+                <p class="text-gray-400 mb-6">5.000 Moedas VIP</p>
+                <button class="w-full bg-purple-600 p-3 rounded-lg font-bold hover:bg-purple-500 transition">COMPRAR</button>
+            </div>
+            <!-- Card 3 -->
+            <div class="glass p-8 rounded-3xl text-center hover:border-purple-500 transition cursor-pointer group" onclick="selectPackage(15000, 12.00)">
+                <i class="fas fa-diamond text-5xl text-blue-400 mb-4 group-hover:scale-110 transition"></i>
+                <h3 class="text-2xl font-bold mb-2">Elite</h3>
+                <p class="text-4xl font-black mb-6">R$ 12,00</p>
+                <p class="text-gray-400 mb-6">15.000 Moedas VIP</p>
+                <button class="w-full bg-slate-700 p-3 rounded-lg font-bold group-hover:bg-purple-600 transition">COMPRAR</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Dashboard Page -->
+    <section id="page-dash" class="hidden-page pt-32 px-6 min-h-screen flex justify-center">
+        <div class="glass p-8 rounded-3xl w-full max-w-4xl">
+            <h2 class="text-3xl font-bold mb-6">Olá, <span id="user-display" class="gradient-text">Jogador</span>! 👋</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="bg-slate-800 p-6 rounded-2xl">
+                    <p class="text-gray-400">Status da Conta</p>
+                    <p class="text-2xl font-bold text-green-400">Ativa</p>
+                </div>
+                <div class="bg-slate-800 p-6 rounded-2xl">
+                    <p class="text-gray-400">Sua Classificação</p>
+                    <p class="text-2xl font-bold text-blue-400">VIP Bronze</p>
+                </div>
+            </div>
+            <h3 class="text-xl font-bold mt-10 mb-4">Seu Histórico de Compras</h3>
+            <div id="history" class="space-y-3 text-gray-300">
+                <!-- Compras aparecem aqui -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Payment Area -->
+    <div id="payment-modal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-[100] flex items-center justify-center p-4">
+        <div class="glass p-8 rounded-3xl max-w-sm w-full text-center">
+            <h3 class="text-2xl font-bold mb-4">Pagamento Pix</h3>
             <img id="qr-img" src="" class="mx-auto w-48 h-48 mb-4">
-            <textarea id="pix-copy" readonly class="w-full p-2 text-xs border rounded bg-gray-100 mb-2"></textarea>
-            <p class="text-xs text-gray-500">O sistema avisará o Admin assim que o pagamento for aprovado.</p>
+            <textarea id="pix-copy" readonly class="w-full p-2 text-xs bg-slate-800 border rounded mb-4"></textarea>
+            <button onclick="closeModal()" class="text-gray-400 underline">Cancelar</button>
         </div>
     </div>
 
     <script>
-        async function pagar() {
-            const nick = document.getElementById('nick').value;
-            const amount = document.getElementById('amount').value;
-            if(!nick || !amount) return alert("Preencha tudo!");
+        async function showPage(page) {
+            document.querySelectorAll('section').forEach(s => s.classList.add('hidden-page'));
+            document.getElementById('page-' + page).classList.remove('hidden-page');
+        }
 
-            document.getElementById('btn-pagar').innerText = "Processando...";
-            
+        async function checkAuth() {
+            const res = await fetch('/auth/me');
+            if (res.ok) {
+                const data = await res.json();
+                document.getElementById('nav-auth').classList.add('hidden');
+                document.getElementById('nav-dash').classList.remove('hidden');
+                document.getElementById('btn-logout').classList.remove('hidden');
+                document.getElementById('user-display').innerText = data.username;
+            }
+        }
+
+        async function register() {
+            const username = document.getElementById('reg-user').value;
+            const password = document.getElementById('reg-pass').value;
+            const nickSAMP = document.getElementById('reg-nick').value;
+            const res = await fetch('/auth/register', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ username, password, nickSAMP })
+            });
+            if (res.ok) { alert("Conta criada! Faça login."); showPage('login'); }
+            else { alert("Erro ao criar conta!"); }
+        }
+
+        async function login() {
+            const username = document.getElementById('log-user').value;
+            const password = document.getElementById('log-pass').value;
+            const res = await fetch('/auth/login', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ username, password })
+            });
+            if (res.ok) { 
+                alert("Bem vindo!"); 
+                checkAuth(); 
+                showPage('home'); 
+            } else { alert("Login incorreto!"); }
+        }
+
+        async function logout() {
+            await fetch('/auth/logout');
+            location.reload();
+        }
+
+        async function selectPackage(amount, price) {
+            const nick = prompt("Confirme seu Nick no SAMP:");
+            if(!nick) return;
+
             const res = await fetch('/create-payment', {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({ nick, amount })
+                body: JSON.stringify({ nick, amount: price })
             });
-            const data = await res.json();
 
-            document.getElementById('payment-area').classList.remove('hidden');
-            document.getElementById('qr-img').src = `data:image/jpeg;base64,${data.qr_code_base64}`;
-            document.getElementById('pix-copy').value = data.qr_code;
-            document.getElementById('btn-pagar').innerText = "PIX GERADO!";
+            if(res.ok) {
+                const data = await res.json();
+                document.getElementById('qr-img').src = `data:image/jpeg;base64,${data.qr_code_base64}`;
+                document.getElementById('pix-copy').value = data.qr_code;
+                document.getElementById('payment-modal').classList.remove('hidden');
+            } else {
+                alert("Erro! Você precisa estar logado para comprar.");
+                showPage('login');
+            }
         }
+
+        function closeModal() { document.getElementById('payment-modal').classList.add('hidden'); }
+
+        checkAuth();
     </script>
 </body>
 </html>
